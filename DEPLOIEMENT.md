@@ -1,4 +1,4 @@
-# MASTERPLAN v2 — Installation
+# MASTERPLAN v3 — Installation
 
 ## 1. Mettre en ligne (3 min, une seule fois)
 
