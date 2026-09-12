@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<title>MASTERPLAN</title>
+<meta name="theme-color" content="#F2F2F7" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="MASTERPLAN">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" href="icon-192.png">
+<style>
+:root{
+  --bg:#F2F2F7;--card:#FFFFFF;--card2:#F2F2F7;--fill:rgba(120,120,128,.12);--fill2:rgba(120,120,128,.20);
+  --label:#000;--label2:rgba(60,60,67,.6);--label3:rgba(60,60,67,.3);--sep:rgba(60,60,67,.29);
+  --blue:#007AFF;--green:#34C759;--orange:#FF9500;--red:#FF3B30;--yellow:#FFCC00;--purple:#AF52DE;--teal:#5AC8FA;--indigo:#5856D6;--pink:#FF2D55;--mint:#00C7BE;--cyan:#32ADE6;--gray:#8E8E93;
+  --bar:rgba(249,249,249,.94);--bar-border:rgba(0,0,0,.12);
+  --sat:env(safe-area-inset-top);--sab:env(safe-area-inset-bottom);--tabh:50px;
+}
+@media(prefers-color-scheme:dark){:root{
+  --bg:#000;--card:#1C1C1E;--card2:#2C2C2E;--fill:rgba(120,120,128,.24);--fill2:rgba(120,120,128,.36);
+  --label:#fff;--label2:rgba(235,235,245,.6);--label3:rgba(235,235,245,.3);--sep:rgba(84,84,88,.65);
+  --blue:#0A84FF;--green:#30D158;--orange:#FF9F0A;--red:#FF453A;--yellow:#FFD60A;--purple:#BF5AF2;--teal:#64D2FF;--indigo:#5E5CE6;--pink:#FF375F;--mint:#63E6E2;--cyan:#64D2FF;--gray:#8E8E93;
+  --bar:rgba(29,29,31,.92);--bar-border:rgba(255,255,255,.12);
+}}
+html[data-theme=light]{--bg:#F2F2F7;--card:#FFFFFF;--card2:#F2F2F7;--fill:rgba(120,120,128,.12);--fill2:rgba(120,120,128,.20);--label:#000;--label2:rgba(60,60,67,.6);--label3:rgba(60,60,67,.3);--sep:rgba(60,60,67,.29);--blue:#007AFF;--green:#34C759;--orange:#FF9500;--red:#FF3B30;--yellow:#FFCC00;--purple:#AF52DE;--teal:#5AC8FA;--indigo:#5856D6;--pink:#FF2D55;--mint:#00C7BE;--cyan:#32ADE6;--bar:rgba(249,249,249,.94);--bar-border:rgba(0,0,0,.12);}
+html[data-theme=dark]{--bg:#000;--card:#1C1C1E;--card2:#2C2C2E;--fill:rgba(120,120,128,.24);--fill2:rgba(120,120,128,.36);--label:#fff;--label2:rgba(235,235,245,.6);--label3:rgba(235,235,245,.3);--sep:rgba(84,84,88,.65);--blue:#0A84FF;--green:#30D158;--orange:#FF9F0A;--red:#FF453A;--yellow:#FFD60A;--purple:#BF5AF2;--teal:#64D2FF;--indigo:#5E5CE6;--pink:#FF375F;--mint:#63E6E2;--cyan:#64D2FF;--bar:rgba(29,29,31,.92);--bar-border:rgba(255,255,255,.12);}
+
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{background:var(--bg);color:var(--label);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","SF Pro Display","Helvetica Neue",Helvetica,Arial,sans-serif;font-size:17px;line-height:1.35;-webkit-font-smoothing:antialiased;overscroll-behavior-y:none;min-height:100%;}
+button,input,select,textarea{font-family:inherit;font-size:inherit;color:inherit;}
+button{background:none;border:none;cursor:pointer;}
+h1,h2,h3{font-weight:700;letter-spacing:-.4px;color:var(--label);}
+.hide{display:none!important;}
+
+/* ── SCREENS ── */
+#app{min-height:100vh;padding-bottom:calc(var(--tabh) + var(--sab) + 24px);}
+.screen{display:none;padding:0 16px 20px;animation:fadein .2s ease;}
+.screen.active{display:block;}
+@keyframes fadein{from{opacity:0;transform:translateX(6px)}to{opacity:1;transform:none}}
+.navbar{padding:calc(var(--sat) + 8px) 0 6px;position:sticky;top:0;background:var(--bg);z-index:50;}
+.navbar .top{display:flex;align-items:center;justify-content:space-between;height:44px;}
+.navbar .back{display:flex;align-items:center;gap:2px;color:var(--blue);font-size:17px;margin-left:-6px;}
+.navbar .back svg{width:12px;height:20px;}
+.navbar .rbtn{color:var(--blue);font-size:17px;font-weight:600;padding:6px 0 6px 12px;display:flex;align-items:center;gap:6px;}
+.navbar .rbtn.icon{width:34px;height:34px;padding:0;justify-content:center;background:var(--fill);border-radius:50%;font-size:20px;}
+.navbar h1{font-size:34px;line-height:41px;letter-spacing:.37px;margin-top:2px;}
+.navbar .sub{font-size:15px;color:var(--label2);margin-top:2px;}
+
+/* ── TAB BAR ── */
+.tabbar{position:fixed;left:0;right:0;bottom:0;height:calc(var(--tabh) + var(--sab));padding-bottom:var(--sab);background:var(--bar);backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);border-top:.5px solid var(--bar-border);display:flex;z-index:100;}
+.tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;color:var(--gray);font-size:10px;font-weight:500;letter-spacing:.1px;padding-top:4px;}
+.tab svg{width:26px;height:26px;fill:currentColor;}
+.tab.active{color:var(--blue);}
+
+/* ── GROUPED LISTS (iOS inset) ── */
+.group{background:var(--card);border-radius:12px;overflow:hidden;margin-bottom:22px;}
+.group-h{font-size:13px;font-weight:400;color:var(--label2);text-transform:uppercase;letter-spacing:-.08px;padding:0 16px 7px;margin-top:-10px;display:flex;justify-content:space-between;align-items:baseline;}
+.group-h a{color:var(--blue);text-transform:none;font-size:15px;letter-spacing:0;}
+.group-f{font-size:13px;color:var(--label2);padding:7px 16px 0;margin-top:-16px;margin-bottom:22px;line-height:1.4;}
+.cell{display:flex;align-items:center;gap:12px;min-height:44px;padding:11px 16px 11px 16px;position:relative;}
+.cell+.cell::before{content:'';position:absolute;top:0;left:16px;right:0;height:.5px;background:var(--sep);}
+.cell.lead-icon+.cell::before{left:56px;}
+.cell .ic{width:29px;height:29px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;color:#fff;}
+.cell .bd{flex:1;min-width:0;}
+.cell .t{font-size:17px;color:var(--label);}
+.cell .s{font-size:15px;color:var(--label2);margin-top:1px;line-height:1.3;}
+.cell .s.small{font-size:13px;}
+.cell .v{font-size:17px;color:var(--label2);text-align:right;flex-shrink:0;}
+.cell .chev{color:var(--label3);width:8px;height:14px;flex-shrink:0;}
+.cell.tap:active{background:var(--fill);}
+.cell .ti{font-size:15px;color:var(--label2);flex-shrink:0;}
+.cell.done .t{color:var(--label2);text-decoration:line-through;}
+.cell.skipped{opacity:.5;}
+
+/* checkbox (iOS Reminders style) */
+.ck{width:22px;height:22px;border-radius:50%;border:1.5px solid var(--label3);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .15s;}
+.ck svg{width:12px;height:12px;stroke:#fff;stroke-width:3;fill:none;opacity:0;}
+.ck.on{background:var(--blue);border-color:var(--blue);}
+.ck.on svg{opacity:1;}
+.ck.on.g{background:var(--green);border-color:var(--green);}
+
+/* ── HERO (Whoop) ── */
+.hero{background:var(--card);border-radius:16px;padding:18px 16px;margin-bottom:22px;display:flex;align-items:center;gap:18px;}
+.ring{width:96px;height:96px;flex-shrink:0;position:relative;}
+.ring svg{width:96px;height:96px;transform:rotate(-90deg);}
+.ring .val{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.ring .val b{font-size:30px;font-weight:700;letter-spacing:-1px;line-height:1;}
+.ring .val small{font-size:11px;color:var(--label2);font-weight:600;letter-spacing:.3px;margin-top:2px;}
+.hero .bd{flex:1;min-width:0;}
+.hero .lab{font-size:13px;font-weight:600;letter-spacing:.2px;text-transform:uppercase;margin-bottom:4px;}
+.hero .msg{font-size:15px;color:var(--label);line-height:1.35;}
+.hero .meta{display:flex;gap:12px;margin-top:8px;flex-wrap:wrap;}
+.hero .meta span{font-size:13px;color:var(--label2);}
+.hero .meta b{color:var(--label);font-weight:600;}
+.hero .why{font-size:12px;color:var(--label2);margin-top:6px;}
+
+/* ── PILLS ── */
+.pill{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:600;padding:4px 10px;border-radius:999px;white-space:nowrap;}
+.pill.blue{background:rgba(0,122,255,.12);color:var(--blue);}
+.pill.green{background:rgba(52,199,89,.14);color:var(--green);}
+.pill.orange{background:rgba(255,149,0,.14);color:var(--orange);}
+.pill.red{background:rgba(255,59,48,.14);color:var(--red);}
+.pill.gray{background:var(--fill);color:var(--label2);}
+.badge{font-size:11px;font-weight:600;padding:2px 7px;border-radius:5px;background:var(--fill);color:var(--label2);white-space:nowrap;}
+.scaled{color:var(--orange);font-weight:600;}
+
+/* ── BUTTONS ── */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:44px;padding:0 18px;border-radius:12px;font-size:17px;font-weight:600;background:var(--fill);color:var(--blue);transition:opacity .12s,transform .12s;}
+.btn:active{opacity:.7;transform:scale(.98);}
+.btn.primary{background:var(--blue);color:#fff;}
+.btn.red{color:var(--red);}
+.btn.full{width:100%;}
+.btn.sm{min-height:34px;padding:0 14px;font-size:15px;border-radius:10px;}
+.btn.plain{background:none;}
+.btnrow{display:flex;gap:10px;}
+.btnrow .btn{flex:1;}
+
+/* ── FORMS ── */
+.frow{display:flex;align-items:center;gap:12px;min-height:44px;padding:8px 16px;position:relative;}
+.frow+.frow::before{content:'';position:absolute;top:0;left:16px;right:0;height:.5px;background:var(--sep);}
+.frow label{font-size:17px;color:var(--label);flex-shrink:0;min-width:96px;}
+.frow input,.frow select,.frow textarea{flex:1;background:none;border:none;outline:none;font-size:17px;color:var(--label);text-align:right;min-width:0;-webkit-appearance:none;}
+.frow input::placeholder{color:var(--label3);}
+.frow textarea{text-align:left;min-height:64px;resize:none;padding:4px 0;}
+.frow.col{flex-direction:column;align-items:stretch;gap:6px;}
+.frow.col label{font-size:13px;color:var(--label2);text-transform:uppercase;letter-spacing:-.08px;}
+.frow.col input,.frow.col textarea{text-align:left;}
+.frow select{text-align:right;direction:rtl;}
+.frow select option{direction:ltr;}
+.slider{-webkit-appearance:none;width:100%;height:4px;border-radius:2px;background:var(--fill2);outline:none;}
+.slider::-webkit-slider-thumb{-webkit-appearance:none;width:28px;height:28px;border-radius:50%;background:#fff;box-shadow:0 3px 8px rgba(0,0,0,.15),0 0 0 .5px rgba(0,0,0,.05);}
+.bigval{font-size:44px;font-weight:700;letter-spacing:-1.5px;text-align:center;padding:6px 0 2px;}
+.seg{display:flex;background:var(--fill);border-radius:9px;padding:2px;}
+.seg span{flex:1;text-align:center;padding:6px 4px;border-radius:7px;font-size:13px;font-weight:600;color:var(--label);transition:background .15s;}
+.seg span.on{background:var(--card);box-shadow:0 3px 8px rgba(0,0,0,.12),0 3px 1px rgba(0,0,0,.04);}
+@media(prefers-color-scheme:dark){.seg span.on{background:#636366;}}
+html[data-theme=dark] .seg span.on{background:#636366;}
+.sw{width:51px;height:31px;border-radius:16px;background:var(--fill2);position:relative;flex-shrink:0;transition:background .2s;}
+.sw::after{content:'';position:absolute;top:2px;left:2px;width:27px;height:27px;border-radius:50%;background:#fff;box-shadow:0 3px 8px rgba(0,0,0,.15),0 3px 1px rgba(0,0,0,.06);transition:transform .2s;}
+.sw.on{background:var(--green);} .sw.on::after{transform:translateX(20px);}
+
+/* ── SHEET ── */
+.sheet-bg{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:200;display:none;}
+.sheet-bg.open{display:block;}
+.sheet{position:fixed;left:0;right:0;bottom:0;background:var(--bg);border-radius:14px 14px 0 0;z-index:201;max-height:92vh;overflow-y:auto;transform:translateY(100%);transition:transform .3s cubic-bezier(.32,.72,0,1);padding-bottom:calc(16px + var(--sab));}
+.sheet.open{transform:none;}
+.sheet .grab{width:36px;height:5px;border-radius:3px;background:var(--label3);margin:8px auto 4px;}
+.sheet .shead{display:flex;align-items:center;justify-content:space-between;padding:8px 16px 12px;}
+.sheet .shead h2{font-size:17px;font-weight:600;flex:1;text-align:center;}
+.sheet .shead button{color:var(--blue);font-size:17px;min-width:60px;text-align:left;}
+.sheet .shead button.done{font-weight:600;text-align:right;}
+.sheet .shead button.red{color:var(--red);}
+.sheet .sbody{padding:0 16px;}
+
+/* ── WEEK STRIP ── */
+.strip{display:flex;gap:4px;margin:6px 0 18px;}
+.ws{flex:1;text-align:center;padding:6px 0 8px;border-radius:10px;}
+.ws .d{font-size:11px;font-weight:600;color:var(--label2);text-transform:uppercase;}
+.ws .n{font-size:20px;font-weight:600;color:var(--label);margin-top:2px;line-height:1.1;}
+.ws .dot{width:6px;height:6px;border-radius:50%;margin:5px auto 0;background:transparent;}
+.ws.sel{background:var(--fill);}
+.ws.today .n{color:var(--blue);}
+.ws.sel.today{background:var(--blue);} .ws.sel.today .n,.ws.sel.today .d{color:#fff;}
+.ws .dot.g{background:var(--green);}.ws .dot.y{background:var(--orange);}.ws .dot.r{background:var(--red);}
+
+/* ── STATS ── */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:22px;}
+.stat{background:var(--card);border-radius:12px;padding:12px 12px 10px;}
+.stat .v{font-size:24px;font-weight:700;letter-spacing:-.8px;line-height:1.1;}
+.stat .l{font-size:12px;color:var(--label2);margin-top:3px;}
+.chart{width:100%;height:120px;display:block;}
+.chart-lbl{display:flex;justify-content:space-between;font-size:11px;color:var(--label2);margin-top:6px;}
+
+/* ── GOALS ── */
+.prog{height:6px;background:var(--fill);border-radius:3px;overflow:hidden;margin-top:10px;}
+.prog i{display:block;height:100%;border-radius:3px;background:var(--blue);}
+
+/* ── GUIDE ── */
+.subtabs{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding:2px 0 14px;margin:0 -16px;padding-left:16px;padding-right:16px;}
+.subtabs::-webkit-scrollbar{display:none;}
+.subtab{flex-shrink:0;font-size:15px;font-weight:600;padding:7px 14px;border-radius:999px;background:var(--fill);color:var(--label);}
+.subtab.on{background:var(--label);color:var(--bg);}
+.acc{position:relative;}
+.acc+.acc::before{content:'';position:absolute;top:0;left:16px;right:0;height:.5px;background:var(--sep);}
+.acc-h{display:flex;align-items:center;gap:12px;min-height:44px;padding:11px 16px;}
+.acc-h .ic{font-size:20px;width:26px;text-align:center;flex-shrink:0;}
+.acc-h .t{flex:1;font-size:17px;}
+.acc-h .t small{display:block;font-size:13px;color:var(--label2);margin-top:1px;}
+.acc-h .chev{width:8px;height:14px;color:var(--label3);transition:transform .2s;}
+.acc.open .acc-h .chev{transform:rotate(90deg);}
+.acc-b{display:none;padding:0 16px 14px;}
+.acc.open .acc-b{display:block;}
+.acc-b p{font-size:15px;color:var(--label2);line-height:1.45;margin-bottom:8px;}
+.kv{display:flex;justify-content:space-between;gap:12px;padding:8px 0;font-size:15px;position:relative;}
+.kv+.kv::before{content:'';position:absolute;top:0;left:0;right:0;height:.5px;background:var(--sep);}
+.kv .k{color:var(--label2);flex-shrink:0;}
+.kv .v{color:var(--label);text-align:right;}
+.kv .v.g{color:var(--green);}.kv .v.y{color:var(--orange);}.kv .v.r{color:var(--red);}
+.note{background:var(--fill);border-radius:10px;padding:10px 12px;font-size:14px;color:var(--label);line-height:1.4;margin:8px 0;}
+.note strong{font-weight:600;}
+.note.ok{background:rgba(52,199,89,.12);}.note.warn{background:rgba(255,149,0,.12);}.note.red{background:rgba(255,59,48,.12);}.note.golf{background:rgba(52,199,89,.12);}
+.ex{display:flex;align-items:flex-start;gap:10px;padding:8px 0;font-size:15px;position:relative;}
+.ex+.ex::before{content:'';position:absolute;top:0;left:0;right:0;height:.5px;background:var(--sep);}
+.ex .n{flex:1;} .ex .n b{font-weight:600;display:block;} .ex .n span{font-size:13px;color:var(--label2);display:block;margin-top:1px;line-height:1.35;}
+.ex .s{font-size:15px;font-weight:600;color:var(--blue);white-space:nowrap;text-align:right;min-width:60px;font-variant-numeric:tabular-nums;}
+.ex-grp{font-size:13px;font-weight:600;color:var(--label2);text-transform:uppercase;letter-spacing:-.08px;margin:14px 0 2px;}
+.tbl{width:100%;border-collapse:collapse;font-size:14px;margin:6px 0;}
+.tbl th{font-size:12px;font-weight:600;color:var(--label2);text-transform:uppercase;text-align:left;padding:6px 6px 6px 0;border-bottom:.5px solid var(--sep);}
+.tbl td{padding:8px 6px 8px 0;border-bottom:.5px solid var(--sep);vertical-align:top;line-height:1.35;}
+.tbl tr:last-child td{border-bottom:none;}
+.tbl .m{font-weight:600;white-space:nowrap;} .tbl .c{text-align:center;} .tbl .g{color:var(--green);font-weight:600;} .tbl .y{color:var(--orange);} .tbl .n{color:var(--label3);}
+
+/* ── COACH (chat) ── */
+.chat{display:flex;flex-direction:column;gap:8px;padding-bottom:110px;}
+.msg{max-width:84%;padding:10px 14px;border-radius:18px;font-size:16px;line-height:1.38;white-space:pre-wrap;word-wrap:break-word;}
+.msg.u{align-self:flex-end;background:var(--blue);color:#fff;border-bottom-right-radius:5px;}
+.msg.a{align-self:flex-start;background:var(--card2);color:var(--label);border-bottom-left-radius:5px;}
+@media(prefers-color-scheme:light){.msg.a{background:#E9E9EB;}}
+html[data-theme=light] .msg.a{background:#E9E9EB;}
+.msg.a strong{font-weight:600;}
+.msg .act{margin-top:10px;background:var(--card);border-radius:12px;padding:10px 12px;display:flex;align-items:center;gap:10px;}
+.msg .act .bd{flex:1;font-size:14px;} .msg .act .bd b{display:block;font-weight:600;font-size:15px;}
+.msg.sys{align-self:center;background:none;color:var(--label2);font-size:13px;text-align:center;max-width:100%;padding:4px 0;}
+.typing{align-self:flex-start;background:var(--card2);border-radius:18px;padding:12px 16px;display:flex;gap:4px;}
+.typing i{width:8px;height:8px;border-radius:50%;background:var(--label3);animation:blink 1.2s infinite;}
+.typing i:nth-child(2){animation-delay:.2s}.typing i:nth-child(3){animation-delay:.4s}
+@keyframes blink{0%,60%,100%{opacity:.3}30%{opacity:1}}
+.chips{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;margin:0 -16px 10px;padding:0 16px;}
+.chips::-webkit-scrollbar{display:none;}
+.chip{flex-shrink:0;font-size:14px;padding:8px 14px;border-radius:999px;background:var(--card);color:var(--blue);font-weight:500;}
+.composer{position:fixed;left:0;right:0;bottom:calc(var(--tabh) + var(--sab));padding:8px 12px 10px;background:var(--bar);backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);border-top:.5px solid var(--bar-border);display:none;gap:8px;align-items:flex-end;z-index:99;}
+.composer.show{display:flex;}
+.composer textarea{flex:1;background:var(--card);border:.5px solid var(--sep);border-radius:20px;padding:9px 14px;font-size:17px;line-height:1.3;resize:none;max-height:120px;outline:none;color:var(--label);}
+.composer button{width:36px;height:36px;border-radius:50%;background:var(--blue);color:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.composer button:disabled{opacity:.35;}
+.composer button svg{width:18px;height:18px;fill:#fff;}
+.coach-empty{text-align:center;padding:40px 20px 20px;}
+.coach-empty .spark{width:64px;height:64px;border-radius:18px;margin:0 auto 14px;background:linear-gradient(135deg,var(--purple),var(--blue));display:flex;align-items:center;justify-content:center;}
+.coach-empty .spark svg{width:34px;height:34px;fill:#fff;}
+.coach-empty h2{font-size:22px;margin-bottom:6px;}
+.coach-empty p{font-size:15px;color:var(--label2);line-height:1.4;}
+
+.toast{position:fixed;left:50%;bottom:calc(var(--tabh) + var(--sab) + 16px);transform:translateX(-50%) translateY(16px);background:var(--label);color:var(--bg);padding:10px 18px;border-radius:999px;font-size:15px;font-weight:500;z-index:300;opacity:0;transition:all .25s;pointer-events:none;box-shadow:0 8px 24px rgba(0,0,0,.2);}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+.empty{text-align:center;padding:30px 16px;color:var(--label2);font-size:15px;line-height:1.45;}
+.alert{display:flex;gap:10px;padding:12px 14px;border-radius:12px;font-size:14px;line-height:1.4;margin-bottom:10px;background:var(--card);}
+.alert .i{font-size:18px;flex-shrink:0;} .alert b{font-weight:600;}
+.alert.red{background:rgba(255,59,48,.12);}.alert.warn{background:rgba(255,149,0,.12);}.alert.ok{background:rgba(52,199,89,.12);}
+.help{font-size:13px;color:var(--label2);line-height:1.4;padding:6px 16px 0;}
+.spinner{width:18px;height:18px;border:2px solid var(--fill2);border-top-color:var(--blue);border-radius:50%;animation:spin .8s linear infinite;display:inline-block;}
+@keyframes spin{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- JOUR -->
+  <section id="s-jour" class="screen active">
+    <div class="navbar"><div class="top"><span class="sub" id="j-sub"></span><button class="rbtn icon" onclick="openSettings()" aria-label="Réglages">⚙︎</button></div><h1 id="j-title">Aujourd'hui</h1></div>
+    <div class="strip" id="j-strip"></div>
+    <div id="j-hero"></div>
+    <div class="group-h"><span>Séances</span><a onclick="go('semaine')">Modifier</a></div>
+    <div class="group" id="j-sessions"></div>
+    <div class="group-h"><span>Rituel</span><a onclick="openHabitEditor()">Éditer</a></div>
+    <div class="group" id="j-habits"></div>
+    <div class="group-h"><span>Note</span></div>
+    <div class="group"><div class="frow col" style="padding:10px 16px"><textarea id="j-note" placeholder="Ressenti, jambes, contexte…"></textarea></div></div>
+    <div class="group-h"><span>Objectifs</span><a onclick="push('objectifs')">Tout voir</a></div>
+    <div class="group" id="j-goals"></div>
+  </section>
+
+  <!-- WHOOP -->
+  <section id="s-whoop" class="screen">
+    <div class="navbar"><div class="top"><span></span><button class="rbtn icon" onclick="openWhoopSheet()">＋</button></div><h1>Whoop</h1></div>
+    <div id="w-alerts"></div>
+    <div class="stats" id="w-stats"></div>
+    <div class="group-h"><span>Recovery · 14 jours</span></div>
+    <div class="group"><div style="padding:14px 16px 10px"><svg class="chart" id="w-chart" viewBox="0 0 340 120" preserveAspectRatio="none"></svg><div class="chart-lbl" id="w-chart-lbl"></div></div></div>
+    <div class="group-h"><span>Fréquence cardiaque au repos</span></div>
+    <div class="group"><div style="padding:14px 16px 10px"><svg class="chart" id="w-chart2" viewBox="0 0 340 120" preserveAspectRatio="none"></svg></div></div>
+    <div class="group-h"><span>Historique</span></div>
+    <div class="group" id="w-list"></div>
+    <div class="group-h"><span>Règles</span></div>
+    <div class="group">
+      <div class="cell"><div class="bd"><div class="t">🟢 Recovery ≥ 66 %</div></div><div class="v">Séance complète</div></div>
+      <div class="cell"><div class="bd"><div class="t">🟡 33 – 65 %</div></div><div class="v">−30 %, pas de fractionné</div></div>
+      <div class="cell"><div class="bd"><div class="t">🔴 &lt; 33 %</div></div><div class="v">Mobilité uniquement</div></div>
+      <div class="cell"><div class="bd"><div class="t">💓 RHR ≥ 60</div></div><div class="v">Rouge automatique</div></div>
+      <div class="cell"><div class="bd"><div class="t">😴 2 nuits &lt; 6h30</div></div><div class="v">Plafonné à jaune</div></div>
+    </div>
+  </section>
+
+  <!-- SEMAINE -->
+  <section id="s-semaine" class="screen">
+    <div class="navbar"><div class="top"><span></span><button class="rbtn" onclick="resetWeek()">Réinitialiser</button></div><h1>Semaine</h1></div>
+    <div class="seg" id="sem-seg" style="margin-bottom:18px"><span data-s="ete" onclick="setWeekView('ete')">Été</span><span data-s="hiver" onclick="setWeekView('hiver')">Hiver</span><span data-s="transition" onclick="setWeekView('transition')">Transition</span></div>
+    <div class="group-h"><span>Intensité globale</span><span id="int-val" style="color:var(--label);font-size:15px;font-weight:600">100 %</span></div>
+    <div class="group"><div style="padding:14px 16px 12px"><input type="range" class="slider" id="int-slider" min="50" max="120" step="5" value="100" oninput="setIntensity(this.value)"></div></div>
+    <div class="group-f">S'applique aux séances marquées ajustables (km, minutes). Se combine au Whoop du jour.</div>
+    <div id="sem-days"></div>
+  </section>
+
+  <!-- COACH -->
+  <section id="s-coach" class="screen">
+    <div class="navbar"><div class="top"><span></span><button class="rbtn" onclick="newChat()">Nouveau</button></div><h1>Coach</h1></div>
+    <div id="c-chips" class="chips"></div>
+    <div class="chat" id="c-chat"></div>
+  </section>
+
+  <!-- PLUS -->
+  <section id="s-plus" class="screen">
+    <div class="navbar"><div class="top"><span></span></div><h1>Plus</h1></div>
+    <div class="group">
+      <div class="cell tap lead-icon" onclick="push('objectifs')"><span class="ic" style="background:var(--red)">🎯</span><div class="bd"><div class="t">Objectifs</div></div><svg class="chev" viewBox="0 0 8 14"><path d="M1 1l6 6-6 6" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg></div>
+      <div class="cell tap lead-icon" onclick="push('guide')"><span class="ic" style="background:var(--orange)">📚</span><div class="bd"><div class="t">Guide</div><div class="s small">Plan annuel, renfo, golf, nutrition, équipement…</div></div><svg class="chev" viewBox="0 0 8 14"><path d="M1 1l6 6-6 6" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg></div>
+    </div>
+    <div class="group">
+      <div class="cell tap lead-icon" onclick="openSettings()"><span class="ic" style="background:var(--gray)">⚙︎</span><div class="bd"><div class="t">Réglages</div></div><svg class="chev" viewBox="0 0 8 14"><path d="M1 1l6 6-6 6" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg></div>
+      <div class="cell tap lead-icon" onclick="openAISettings()"><span class="ic" style="background:linear-gradient(135deg,var(--purple),var(--blue))">✦</span><div class="bd"><div class="t">Coach IA</div><div class="s small" id="ai-status">—</div></div><svg class="chev" viewBox="0 0 8 14"><path d="M1 1l6 6-6 6" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg></div>
+    </div>
+    <div class="group">
+      <div class="cell tap lead-icon" onclick="exportData()"><span class="ic" style="background:var(--blue)">⬇︎</span><div class="bd"><div class="t">Exporter les données</div><div class="s small">Sauvegarde JSON</div></div></div>
+      <div class="cell tap lead-icon" onclick="document.getElementById('imp').click()"><span class="ic" style="background:var(--green)">⬆︎</span><div class="bd"><div class="t">Importer</div></div></div>
+    </div>
+    <div class="group-f">Les données vivent sur cet appareil. Exporte une fois par semaine.</div>
+    <input type="file" id="imp" accept=".json" class="hide" onchange="importData(this)">
+  </section>
+
+  <!-- OBJECTIFS (sub) -->
+  <section id="s-objectifs" class="screen">
+    <div class="navbar"><div class="top"><button class="back" onclick="back()"><svg viewBox="0 0 12 20"><path d="M10 1L2 10l8 9" stroke="currentColor" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>Plus</button><button class="rbtn icon" onclick="openGoalSheet()">＋</button></div><h1>Objectifs</h1></div>
+    <div class="group-h"><span>Actifs</span></div>
+    <div class="group" id="g-list"></div>
+    <div class="group-h"><span>Archivés</span></div>
+    <div class="group" id="g-arch"></div>
+  </section>
+
+  <!-- GUIDE (sub) -->
+  <section id="s-guide" class="screen">
+    <div class="navbar"><div class="top"><button class="back" onclick="back()"><svg viewBox="0 0 12 20"><path d="M10 1L2 10l8 9" stroke="currentColor" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>Plus</button><span></span></div><h1>Guide</h1></div>
+    <div class="subtabs" id="gd-tabs"></div>
+    <div id="gd-body"></div>
+  </section>
+
+</div>
+
+<nav class="tabbar">
+  <button class="tab active" data-t="jour" onclick="go('jour')"><svg viewBox="0 0 24 24"><path d="M12 3.2 3 10.5V20a1 1 0 0 0 1 1h5.5v-6h5v6H20a1 1 0 0 0 1-1v-9.5L12 3.2z"/></svg>Jour</button>
+  <button class="tab" data-t="whoop" onclick="go('whoop')"><svg viewBox="0 0 24 24"><path d="M12 21s-7.5-4.6-9.6-9.5C1 8 3.4 4.5 7 4.5c2 0 3.5 1.1 5 3 1.5-1.9 3-3 5-3 3.6 0 6 3.5 4.6 7C19.5 16.4 12 21 12 21z"/></svg>Whoop</button>
+  <button class="tab" data-t="semaine" onclick="go('semaine')"><svg viewBox="0 0 24 24"><path d="M5 4h14a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zm0 5v10h14V9H5zm2-6h2v3H7zm8 0h2v3h-2zM7 11h3v3H7zm5 0h3v3h-3zm-5 4h3v3H7zm5 0h3v3h-3z"/></svg>Semaine</button>
+  <button class="tab" data-t="coach" onclick="go('coach')"><svg viewBox="0 0 24 24"><path d="M12 2l1.8 5.4L19 9l-5.2 1.7L12 16l-1.8-5.3L5 9l5.2-1.6L12 2zm7 11l.9 2.6 2.6.9-2.6.9L19 20l-.9-2.6-2.6-.9 2.6-.9L19 13zM5 14l.7 2 2 .7-2 .7L5 19.5l-.7-2.1-2-.7 2-.7L5 14z"/></svg>Coach</button>
+  <button class="tab" data-t="plus" onclick="go('plus')"><svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="2.4"/><circle cx="12" cy="12" r="2.4"/><circle cx="19" cy="12" r="2.4"/></svg>Plus</button>
+</nav>
+
+<div class="composer" id="composer">
+  <textarea id="c-input" rows="1" placeholder="Demande à ton coach…"></textarea>
+  <button id="c-send" onclick="sendChat()" aria-label="Envoyer"><svg viewBox="0 0 24 24"><path d="M12 4l7 7-1.4 1.4L13 7.8V20h-2V7.8l-4.6 4.6L5 11l7-7z"/></svg></button>
+</div>
+
+<div class="sheet-bg" id="sheet-bg" onclick="closeSheet()"></div>
+<div class="sheet" id="sheet"><div class="grab"></div><div id="sheet-body"></div></div>
+<div class="toast" id="toast"></div>
+<script>
+/* ═══════════════════════════════════════════════
+   DEFAULT DATA — semaines types, habitudes, objectifs
+   ═══════════════════════════════════════════════ */
+const DAYS = ['Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi','Dimanche'];
+const DAYS_S = ['LUN','MAR','MER','JEU','VEN','SAM','DIM'];
+const TYPES = {
+  run:{ic:'🏃',l:'Course',c:'var(--pink)'}, renfo:{ic:'💪',l:'Renfo',c:'var(--purple)'}, golf:{ic:'⛳',l:'Golf',c:'var(--green)'},
+  mtb:{ic:'🚵',l:'MTB',c:'var(--mint)'}, sb:{ic:'❄️',l:'Snowboard',c:'var(--cyan)'}, mob:{ic:'🧘',l:'Mobilité',c:'var(--teal)'},
+  nutri:{ic:'🍽️',l:'Nutrition',c:'var(--orange)'}, rest:{ic:'🛌',l:'Repos',c:'var(--gray)'}, whoop:{ic:'📊',l:'Whoop',c:'var(--indigo)'}
+};
+let _id = 0; const nid = () => 's' + Date.now().toString(36) + (_id++).toString(36);
+const S = (type,title,detail,time,opts={}) => Object.assign({id:nid(),type,title,detail,time,scalable:false,skipOnRed:true,vol:null,unit:''},opts);
+
+const DEFAULT_WEEKS = {
+  ete: [
+    {load:3,sessions:[
+      S('whoop','Whoop check','Recovery · HRV · RHR · sommeil → décide l\'intensité du jour','06:30',{skipOnRed:false}),
+      S('nutri','Petit-déjeuner fixe','3 œufs · bacon · stracciatella 200g · muesli 50g · myrtilles — 860 kcal / P51','07:30',{skipOnRed:false}),
+      S('run','Run 1/3 · EF','Endurance fondamentale · zone 2 · terrain plat à vallonné','09:00',{scalable:true,vol:8,unit:'km'}),
+      S('renfo','Renfo A — Jambes MTB/Trail','Nordic curl · squat excentrique 5s · single-leg RDL · fentes bulgares · hip thrust · step-up · balance board','10:30',{scalable:true,vol:65,unit:'min'}),
+    ]},
+    {load:3,sessions:[
+      S('golf','Parcours 1/2 — 18 trous marchés','~10–12 km de marche · activation golf 15 min avant · noter fairways / GIR / putts','08:30',{vol:18,unit:'trous'}),
+      S('renfo','Renfo B — Golf & haut du corps','Landmine rainbow · wood chop · weighted pull-ups · TRX rows · farmer\'s carry · face pull','15:00',{scalable:true,vol:55,unit:'min'}),
+    ]},
+    {load:3,sessions:[
+      S('whoop','Décision du matin','🟢 fractionné trail · 🟡 EF ou MTB · 🔴 mobilité seulement','06:30',{skipOnRed:false}),
+      S('run','Run 2/3 · Fractionné (ou MTB si jaune)','8×1 min rapide / 1 min récup + échauff 15 min · ou MTB technique 1h–1h30 si charge élevée','09:00',{scalable:true,vol:7,unit:'km'}),
+      S('golf','Petit jeu & putting','Wedges 30–100 m · chipping · bunker · putting 20 min · coût physique nul','16:00',{skipOnRed:false,vol:60,unit:'min'}),
+    ]},
+    {load:5,sessions:[
+      S('golf','Practice — 45 min max','Range avec intention : 1 seul point technique · jamais 18 trous le jeudi','09:00',{vol:45,unit:'min'}),
+      S('renfo','Renfo C — Gainage 30 min UNIQUEMENT','Planche 3×45s · side plank 3×35s · dead bug 3×10 · oiseau-chien 3×12 · hollow 3×30s · rien de plus','13:00',{scalable:true,vol:30,unit:'min'}),
+      S('nutri','PBJ pré-enduro','Pain complet · beurre de cacahuète · confiture — 430 kcal · 1h30 avant le départ','17:00',{skipOnRed:false}),
+      S('mtb','Enduro soir — sacré','Sortie hebdo fixe juin–oct · social + performance · coucher 23h30 max','18:30'),
+    ]},
+    {load:3,sessions:[
+      S('mob','Foam roller 20 min — obligatoire','Quadri · IT band · fessiers · mollets · dorsaux — avant toute séance après l\'enduro','09:00',{skipOnRed:false}),
+      S('renfo','Renfo D — Pull & core','Pull-ups · australian rows · russian twist · landmine rainbow · ab wheel · farmer\'s carry','09:30',{scalable:true,vol:60,unit:'min'}),
+      S('nutri','Préparer le sac de la longue','Flasks · gels comptés · météo · parcours choisi · coucher 22h30','21:00',{skipOnRed:false}),
+    ]},
+    {load:4,sessions:[
+      S('run','Run 3/3 · LA LONGUE','Allure EF conservatrice · bâtons si >800 m D+ · 1 gel / 40 min · boire toutes les 15–20 min','08:00',{scalable:true,vol:20,unit:'km'}),
+      S('mob','Mobilité post-longue','Mollets · hanches · fessiers · 20 min · repas dans l\'heure','—',{skipOnRed:false}),
+    ]},
+    {load:2,sessions:[
+      S('golf','Parcours 2/2 — 18 trous marchés (option A)','Récup active après la longue · moins traumatisant que l\'enduro · premier coupé si Whoop décroche','09:00',{vol:18,unit:'trous'}),
+      S('mtb','MTB plaisir (option B)','Sortie sociale, pas de performance','10:00'),
+      S('rest','Repos total (option C)','Si Whoop <40 % ou semaine très chargée — choix valide','—',{skipOnRed:false}),
+    ]},
+  ],
+  hiver: [
+    {load:3,sessions:[
+      S('whoop','Whoop check','Si <33 % → renfo annulé, journée mobilité','06:30',{skipOnRed:false}),
+      S('renfo','Renfo A — Jambes SB','Jump squat · lateral bounds · fentes bulgares · glute bridge uni · single-leg RDL · balance · wall sit','09:30',{scalable:true,vol:70,unit:'min'}),
+      S('sb','Session snowboard','Enseignement ou perso selon planning école','13:00'),
+    ]},
+    {load:4,sessions:[
+      S('sb','SB matin','3–4h · technique ou enseignement','09:00'),
+      S('renfo','Renfo B — Core & rotation SB','Russian twist · T-rotation · dead bug · oiseau-chien · hollow · landmine rainbow · wood chop','15:00',{scalable:true,vol:55,unit:'min'}),
+    ]},
+    {load:2,sessions:[
+      S('sb','SB léger ou repos actif','Sortie plaisir · pas d\'enseignement · 2–3h max','09:00'),
+      S('mob','Mobilité 30 min','Post-SB : hanches · cheville · épaules · foam roller','16:00',{skipOnRed:false}),
+    ]},
+    {load:3,sessions:[
+      S('renfo','Renfo C — Haut du corps SB','Push-ups · pull-ups · face pull · rotation externe · dead hang · pike push-ups','09:30',{scalable:true,vol:60,unit:'min'}),
+      S('sb','Session SB après-midi','Enseignement ou perso','13:00'),
+    ]},
+    {load:5,sessions:[
+      S('sb','SB full day','Enseignement + perso · 5–6h de snow','08:30'),
+      S('renfo','Renfo D — Full body explosif','Burpees · tuck jumps · clap push-ups · pull-ups explosifs · KB snatch · clean&press','17:30',{scalable:true,vol:50,unit:'min'}),
+    ]},
+    {load:4,sessions:[
+      S('sb','SB enseignement full day','6–8h · peak strain de la semaine · déjeuner 50 g protéines','08:00'),
+      S('nutri','Coucher 22h max','Récup dimanche impérative','22:00',{skipOnRed:false}),
+    ]},
+    {load:1,sessions:[
+      S('rest','Réveil naturel · repos','Pas de strain planifié','—',{skipOnRed:false}),
+      S('sb','SB plaisir (optionnel)','2h max · ludique · si Whoop <40 % → repos total','10:00'),
+      S('mob','Mobilité 30 min + pressothérapie','Récupération active','14:00',{skipOnRed:false}),
+    ]},
+  ],
+  transition: [
+    {load:1,sessions:[S('mob','Mobilité 15–30 min + bilan','Routine réveil + soir · noter ce qui a marché / bloqué','—',{skipOnRed:false})]},
+    {load:2,sessions:[S('renfo','Renfo léger (optionnel)','Haut du corps · pas de jambes lourdes','—',{scalable:true,vol:30,unit:'min'})]},
+    {load:1,sessions:[S('run','Footing léger','Marche/course · zéro intensité','—',{scalable:true,vol:35,unit:'min'})]},
+    {load:1,sessions:[S('rest','Repos ou marche','—','—',{skipOnRed:false})]},
+    {load:1,sessions:[S('mob','Mobilité + pressothérapie','—','—',{skipOnRed:false})]},
+    {load:2,sessions:[S('mob','Sortie nature 1h','Marche · rando légère · plaisir','10:00',{skipOnRed:false}),S('renfo','Renfo léger optionnel','Haut du corps uniquement','14:00',{scalable:true,vol:30,unit:'min'})]},
+    {load:1,sessions:[S('rest','Repos complet','Bilan de la semaine','—',{skipOnRed:false})]},
+  ]
+};
+
+/* Habitudes — reprend le template Notion + les 3 lignes sport manquantes */
+const DEFAULT_HABITS = [
+  {id:'h_sleep',grp:'💤 Nuit',lb:'7h30 de sommeil / 8h au lit (23h → 07h)'},
+  {id:'h_whoop',grp:'☀️ Matin',lb:'Whoop consulté AVANT de décider la séance',sport:true},
+  {id:'h_stretch',grp:'☀️ Matin',lb:'Étirements pieds + corps'},
+  {id:'h_teeth1',grp:'☀️ Matin',lb:'Brossage de dents'},
+  {id:'h_supp',grp:'☀️ Matin',lb:'Compléments (KXNGS + Collagène)'},
+  {id:'h_life',grp:'☀️ Matin',lb:'Lire LIFE GUIDELINE'},
+  {id:'h_mail',grp:'💼 Pro',lb:'Check Mail'},
+  {id:'h_agent',grp:'💼 Pro',lb:'Recap Agent IA — récap 10h Telegram'},
+  {id:'h_session',grp:'🏋️ Sport',lb:'Séance(s) du jour faites ou reportées consciemment',sport:true},
+  {id:'h_mag',grp:'🌙 Soir',lb:'Magnésium bisglycinate 300–400 mg',sport:true},
+  {id:'h_face',grp:'🌙 Soir',lb:'Nettoyage visage + crème'},
+  {id:'h_teeth2',grp:'🌙 Soir',lb:'Brossage de dents'},
+  {id:'h_plan',grp:'📅 Bilan',lb:'Planification du lendemain faite'},
+];
+
+const DEFAULT_GOALS = [
+  {id:'g1',ic:'🏃',title:'Base trail 2027 — volume',sport:'Trail',metric:'km/sem en pic',target:45,current:38,deadline:'2026-10-31',status:'active',notes:'3 runs/sem mai→oct, longue max 22–25 km / 1200 m D+. Ce volume conditionne la qualité du plan 55 km 2027.'},
+  {id:'g2',ic:'🏔️',title:'WildStrubel 55 km',sport:'Trail',metric:'course',target:1,current:0,deadline:'2027-09-12',status:'active',notes:'Plan dédié à construire en déc 2026 / jan 2027 sur la base 2026.'},
+  {id:'g3',ic:'⛳',title:'Descendre l\'index golf',sport:'Golf',metric:'index',target:12,current:18,deadline:'2026-10-31',status:'active',notes:'Levier n°1 : petit jeu et putting (mercredi), pas plus de parcours. Noter fairways / GIR / putts sur 5 parcours.'},
+  {id:'g4',ic:'💪',title:'Renfo 4 séances/sem tenues',sport:'Renfo',metric:'sem consécutives',target:12,current:0,deadline:'2026-12-31',status:'active',notes:'Point faible Whoop (+0.7–1.5 an WHOOP Age). Levier le plus rentable du plan.'},
+  {id:'g5',ic:'📊',title:'WHOOP Age ≤ 22 toute l\'année',sport:'Récup',metric:'ans',target:22,current:20,deadline:'2027-04-30',status:'active',notes:'Été 19–20, hiver 24–25 historiquement. L\'hiver est le vrai test.'},
+  {id:'g6',ic:'😴',title:'8h de sommeil, 5 nuits/7',sport:'Récup',metric:'nuits/sem',target:5,current:3,deadline:'2026-12-31',status:'active',notes:'Nuits 6h–6h30 fréquentes. Coucher 22h30–23h.'},
+];
+
+/* Rattrapage — 14 combos */
+const RATTRAPAGE = {
+'lun-ete':{v:'warn',tag:'Décaler mardi',t:'Lundi été — Run EF + Renfo A',s:['Ce soir : 20 min de mobilité, pas de sport.','Demain matin, Whoop : >50 % → Renfo A mardi avant 9h. <50 % → mercredi.','Le run EF ne se rattrape pas — les deux autres runs portent la progression.','Renfo A version 45 min : Nordic curl 3×6 · fentes bulgares 4×10 · step-up 3×12.','Si Renfo A prend le mardi, Renfo B glisse mercredi matin et remplace le fractionné.']},
+'lun-hiver':{v:'warn',tag:'Décaler mardi',t:'Lundi hiver — Renfo A Jambes SB',s:['Ce soir : mobilité 20 min + foam roller.','Mardi matin si Whoop >50 % : Renfo A avant la session SB.','Version courte : jump squat 4×8 · lateral bounds 3×10 · fentes bulgares 4×10 · balance 3×45s.','Sinon : intégrer jump squats + lateral bounds à l\'échauffement SB de mardi.']},
+'mar-ete':{v:'warn',tag:'Renfo B → mercredi',t:'Mardi été — Parcours 18T + Renfo B',s:['Le parcours est perdu — un créneau, pas une séance.','Renfo B glisse mercredi matin, avant le run ou MTB.','Version courte : landmine rainbow 3×10 · pull-ups 4×max · TRX rows 3×12 · face pull 2×15.','Ne pas décaler au jeudi — gainage léger obligatoire avant l\'enduro.']},
+'mar-hiver':{v:'warn',tag:'Renfo B → mercredi',t:'Mardi hiver — SB + Renfo B Core',s:['La session SB ne se rattrape pas.','Renfo B mercredi matin (journée légère hiver).','Landmine rainbow · wood chop · dead bug · hollow body — 45 min.']},
+'mer-ete':{v:'skip',tag:'Ne pas rattraper',t:'Mercredi été — Run 2 + petit jeu',s:['Le run 2 ne se rattrape pas : aucun créneau de repli sans dégrader autre chose.','Pas le jeudi (enduro le soir), pas le vendredi (veille de longue).','Marche rapide 30 min si l\'horaire le permet. Rien de plus.','Le petit jeu golf se rattrape n\'importe quel jour — coût nul.','La semaine continue normalement.']},
+'mer-hiver':{v:'skip',tag:'Mobilité seulement',t:'Mercredi hiver — SB léger + mobilité',s:['Déjà la journée la plus légère. La louper = repos bonus.','20 min de mobilité à l\'arrivée si possible.','Rien à réorganiser.']},
+'jeu-ete':{v:'stop',tag:'Enduro perdu',t:'Jeudi été — Practice + gainage + enduro',s:['L\'enduro est irrattrapable — sortie collective à date fixe.','Le gainage se reporte vendredi en fin de Renfo D (20 min).','Faisable partout : planche 3×45s · side plank 3×35s · dead bug 3×10 · hollow 3×30s.','Le practice se rattrape n\'importe quand.','Bénéfice indirect : Recovery meilleure vendredi, longue meilleure samedi.']},
+'jeu-hiver':{v:'warn',tag:'Reportable le soir',t:'Jeudi hiver — Renfo C haut du corps',s:['La session SB ne se rattrape pas.','Renfo C sans matériel : pompes 4×15 · pike push-ups 4×12 · rows sur table 4×12 · dead hang 3×30s.','Sinon : version raccourcie vendredi matin.','Garder les face pull / rotations externes même en version dégradée.']},
+'ven-ete':{v:'warn',tag:'Samedi matin',t:'Vendredi été — Foam roller + Renfo D',s:['Option A : samedi matin très tôt, 40 min haut du corps, puis départ longue.','Option B : après la longue, haut du corps uniquement, jambes refroidies.','Le foam roller reste non négociable — 20 min vendredi soir quoi qu\'il arrive.','Ne jamais faire Renfo D complet ET longue le même jour.']},
+'ven-hiver':{v:'warn',tag:'Samedi matin',t:'Vendredi hiver — SB + Renfo D explosif',s:['La session SB : le samedi full day compense.','Renfo D court samedi matin : burpees 3×8 · tuck jumps 3×8 · clap push-ups 3×8 · pull-ups explosifs 3×max.','Sinon : gainage 20 min vendredi soir.']},
+'sam-ete':{v:'warn',tag:'Repositionner dimanche',t:'Samedi été — LA LONGUE',s:['Séance la plus importante de la semaine trail. Se repositionne, ne se supprime pas.','Dimanche : annuler le golf/MTB, faire la longue à la place. Même distance, même D+.','Version 70 % acceptable si créneau court : prévu 22 km → 15–16 km, même D+.','Si dimanche aussi pris : lundi, et la semaine suivante démarre avec un jour de retard.','Préparer le sac dès samedi soir.']},
+'sam-hiver':{v:'stop',tag:'Irrattrapable',t:'Samedi hiver — SB enseignement',s:['Prévenir l\'école dès que possible.','Une journée de snow en moins n\'a aucune conséquence physique.','Ne pas surcharger le dimanche pour compenser.','Tous les renfos de la semaine sont déjà faits — rien de perdu côté force.']},
+'dim-ete':{v:'skip',tag:'Aucune action',t:'Dimanche été — Golf / MTB / repos',s:['Le meilleur jour pour louper quelque chose.','Repos supplémentaire = Recovery meilleure lundi.','Rien à réorganiser.']},
+'dim-hiver':{v:'skip',tag:'Aucune action',t:'Dimanche hiver — Repos',s:['Déjà un jour de repos.','Rien à louper.']}
+};
+const RAT_REASON = {
+ route:{lb:'🚗 Trajet',cls:'warn',t:'<b>Après un long trajet :</b> 20 min de mobilité + foam roller à l\'arrivée avant toute décision. Évaluer l\'état réel avant de planifier un rattrapage.'},
+ travail:{lb:'💼 Charge travail',cls:'',t:'<b>Charge pro :</b> le stress cognitif pèse sur la Recovery autant qu\'une séance. Si ça dure, réduire à 2 runs/sem plutôt que louper irrégulièrement.'},
+ fatigue:{lb:'😴 Fatigue',cls:'red',t:'<b>Fatigue → le Whoop tranche.</b> Sous 40 %, mobilité uniquement. Les étapes ne s\'appliquent qu\'au-dessus de 50 %.'},
+ maladie:{lb:'🤒 Maladie',cls:'red',t:'<b>Maladie → aucun rattrapage.</b> Pas de sport avec fièvre. Reprendre 48h après disparition des symptômes, volume réduit.'},
+ meteo:{lb:'⛈️ Météo',cls:'ok',t:'<b>Météo :</b> si la forme est bonne (>60 %), tout le travail intérieur reste possible — renfo, gainage, mobilité.'}
+};
+</script>
+<script>
+/* ═══════════════════════════════════════════════
+   GUIDE — contenu de référence (Master Plan + Terrain)
+   ═══════════════════════════════════════════════ */
+const kv = (k,v,c='') => `<div class="kv"><span class="k">${k}</span><span class="v ${c}">${v}</span></div>`;
+const ex = (n,w,s) => `<div class="ex"><div class="n"><b>${n}</b><span>${w}</span></div><div class="s">${s}</div></div>`;
+const grp = t => `<div class="ex-grp">${t}</div>`;
+const note = (t,c='') => `<div class="note ${c}">${t}</div>`;
+const CHEV = '<svg class="chev" viewBox="0 0 8 14"><path d="M1 1l6 6-6 6" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg>';
+const acc = (ic,t,body,open=false) => `<div class="acc ${open?'open':''}"><div class="acc-h" onclick="this.parentElement.classList.toggle('open')"><span class="ic">${ic}</span><div class="t">${t}</div>${CHEV}</div><div class="acc-b">${body}</div></div>`;
+
+const RENFO = {
+ ete:{
+  A:{t:'Lundi — Jambes MTB / Trail',sub:'Excentrique · chaîne postérieure · unilatéral · 65 min',
+   cali:grp('⭐ Priorité')+ex('Nordic curl (assisté)','Descente 4–5 s, remontée aux mains. LE plus protecteur pour les descentes.','4 × 5')+grp('🦵 Excentrique')+ex('Squat excentrique 5 s','Descente comptée, remontée normale.','4 × 8')+ex('Fente bulgare','Corrige l\'asymétrie SB.','4 × 10 /c')+ex('Single-leg RDL','Équilibre + ischios.','3 × 10 /c')+grp('🍑 Chaîne postérieure')+ex('Hip thrust PdC','Pause 2 s en haut.','4 × 15')+ex('Step-up 50 cm','Montée explosive, descente contrôlée.','3 × 12 /c')+grp('⚖️ Proprioception')+ex('Équilibre unipodal yeux fermés','Surface instable si possible.','3 × 45s /c'),
+   gym:grp('⭐ Priorité')+ex('Nordic curl machine','Descente 4–5 s.','4 × 6')+grp('🦵 Force')+ex('Back squat excentrique 5 s','70–75 % 1RM. Tempo > charge.','4 × 6')+ex('Fente bulgare haltères','Progression hebdo.','4 × 10 /c')+ex('Romanian deadlift','Dos neutre.','4 × 8')+grp('🍑')+ex('Hip thrust barre','Pause 2 s.','4 × 10')+ex('Leg curl excentrique','Montée 2 j., descente 1 j. 4 s.','3 × 8 /c')+grp('⚖️')+ex('Balance board / Bosu','Mini-squats.','3 × 45s /c')},
+  B:{t:'Mardi — Golf & haut du corps MTB',sub:'Rotation · dos · grip · 55 min',
+   cali:grp('🌀 Rotation golf')+ex('Wood chop élastique','Rotation par les hanches.','4 × 12 /c')+ex('Rotation russe lestée','Pieds décollés, contrôle.','3 × 20')+ex('Pallof press','Anti-rotation.','3 × 12 /c')+grp('🎯 Dos')+ex('Pull-ups prise large','Descente 3 s.','4 × max')+ex('Australian rows','Pause poitrine à la barre.','4 × 12')+ex('Face pull élastique','Santé d\'épaule.','3 × 15')+grp('✊ Grip')+ex('Dead hang','Viser 60 s.','3 × max'),
+   gym:grp('🌀 Rotation golf')+ex('Landmine rainbow','LE mouvement rotation golf.','4 × 10 /c')+ex('Cable wood chop','Charge modérée.','4 × 12 /c')+ex('Pallof press poulie','Bras tendus.','3 × 12 /c')+grp('🎯 Dos')+ex('Weighted pull-ups','Progression charge.','4 × 6')+ex('Rowing barre','Vers le nombril.','4 × 10')+ex('Face pull poulie','3 séries systématiques.','3 × 15')+grp('✊ Grip')+ex('Farmer\'s carry lourd','30–40 m.','4 × 40 m')},
+  C:{t:'Jeudi — Gainage 30 min UNIQUEMENT',sub:'Enduro le soir · rien de plus',
+   cali:note('<strong>Ne rien ajouter.</strong> Si tu te sens frais et que tu veux en faire plus — la réponse est non.','red')+ex('Planche','Rétroversion, fessiers serrés.','3 × 45s')+ex('Side plank','Hanche haute.','3 × 35s /c')+ex('Dead bug','Lombaires plaquées.','3 × 10 /c')+ex('Bird dog','Pause 2 s.','3 × 12 /c')+ex('Hollow body','Réduire l\'amplitude si lombaires décollent.','3 × 30s')+note('Whoop <40 % → annuler le gainage. <33 % → annuler l\'enduro aussi.','ok'),
+   gym:null},
+  D:{t:'Vendredi — Récup enduro + Pull & core',sub:'Foam roller 20 min AVANT · 60 min',
+   cali:note('<strong>Foam roller 20 min obligatoire :</strong> quadri · IT band · fessiers · mollets · dorsaux — 2 min/zone/côté.','warn')+grp('🎯 Tirage')+ex('Pull-ups','Descente 3 s.','5 × max')+ex('Chin-ups','Supination.','3 × max')+ex('Australian rows pieds surélevés','Corps gainé.','4 × 12')+grp('🧱 Core')+ex('Ab wheel','Lombaires ne creusent jamais.','3 × 10')+ex('Rotation russe','Obliques.','3 × 20')+ex('Planche dynamique','Bras tendus ↔ coudes.','3 × 12'),
+   gym:note('<strong>Foam roller 20 min obligatoire</strong> avant.','warn')+grp('🎯 Tirage')+ex('Weighted pull-ups','','4 × 6')+ex('Tirage horizontal poulie','','4 × 12')+ex('Lat pulldown','','3 × 12')+grp('🧱 Core')+ex('Ab wheel','','3 × 10')+ex('Cable rotation','','3 × 15 /c')+ex('Farmer\'s carry','','3 × 40 m')}
+ },
+ hiver:{
+  A:{t:'Lundi — Jambes Snowboard',sub:'Explosivité · stabilité genou · cheville · 70 min',
+   cali:grp('⚡ Explosivité')+ex('Jump squat','Atterrissage silencieux = qualité.','4 × 8')+ex('Lateral bounds','Amplitude max, stabiliser 1 s.','4 × 10 /c')+ex('Tuck jumps','Genoux poitrine.','3 × 10')+grp('🦵 Force')+ex('Fente bulgare','','4 × 10 /c')+ex('Glute bridge unilatéral','Pause 2 s.','3 × 12 /c')+ex('Single-leg RDL','','3 × 10 /c')+ex('Wall sit','Isométrie carving.','3 × 60s')+grp('⚖️')+ex('Équilibre yeux fermés','','3 × 45s /c'),
+   gym:grp('⚡ Explosivité')+ex('Box jump 60 cm','Descendre en marchant.','5 × 5')+ex('Trap bar jump','30 % 1RM, vitesse max.','4 × 5')+ex('Lateral bounds lestés','','4 × 8 /c')+grp('🦵 Force')+ex('Back squat','80–85 % — fenêtre force hiver.','5 × 5')+ex('Fente bulgare haltères','','4 × 10 /c')+ex('Hip thrust barre','','4 × 10')+ex('Leg extension iso','Tenue 5 s.','3 × 10')+grp('⚖️')+ex('Balance board','','3 × 45s')},
+  B:{t:'Mardi — Gainage & rotation SB',sub:'Rotation thoracique · anti-rotation · 55 min',
+   cali:grp('🌀 Rotation')+ex('Rotation russe lestée','','4 × 20')+ex('Planche rotation en T','Ouverture complète.','3 × 10 /c')+ex('Wood chop élastique','','3 × 12 /c')+grp('🧱 Gainage')+ex('Dead bug','','4 × 12 /c')+ex('Bird dog','','3 × 12 /c')+ex('Hollow body','','4 × 35s')+ex('L-sit','Genoux pliés → tendus.','3 × 20s'),
+   gym:grp('🌀 Rotation')+ex('Landmine rainbow','','4 × 10 /c')+ex('Cable wood chop','Haut→bas puis bas→haut.','4 × 12 /c')+ex('Pallof press','','3 × 12 /c')+grp('🧱')+ex('Ab wheel','','4 × 10')+ex('Hanging leg raise','','3 × 12')+ex('Planche lestée','','3 × 45s')},
+  C:{t:'Jeudi — Haut du corps & épaules',sub:'Push/pull · coiffe rotateurs · 60 min',
+   cali:grp('💪 Push')+ex('Pompes larges','','4 × 15')+ex('Pike push-ups','','4 × 12')+ex('Dips','','3 × 10')+grp('🎯 Pull')+ex('Pull-ups','','4 × max')+ex('Australian rows','','4 × 12')+grp('🛡️ Coiffe — protection chute')+ex('Face pull élastique','Prévention, pas performance.','3 × 20')+ex('Rotation externe élastique','Coude collé, charge très légère.','3 × 15 /c')+ex('Dead hang','','3 × 45s'),
+   gym:grp('💪 Push')+ex('Développé militaire','','4 × 8')+ex('Développé couché haltères','','4 × 10')+ex('Dips lestés','','3 × 8')+grp('🎯 Pull')+ex('Weighted pull-ups','','4 × 6')+ex('Rowing barre','','4 × 10')+grp('🛡️')+ex('Face pull poulie','','3 × 20')+ex('Rotation externe poulie','','3 × 15 /c')},
+  D:{t:'Vendredi — Full body explosif',sub:'Puissance · conditionnement · 50 min',
+   cali:grp('⚡ Circuit — 4 tours, repos 90 s')+ex('Burpees','','10')+ex('Tuck jumps','','8')+ex('Clap push-ups','Régresser si besoin.','6')+ex('Pull-ups explosifs','','5')+ex('Mountain climbers','','30s')+note('Whoop <50 % : 3 tours, couper les clap push-ups.'),
+   gym:grp('⚡ Puissance')+ex('KB snatch','Technique avant charge.','4 × 6 /c')+ex('DB clean & press','','4 × 8')+ex('KB swing','','4 × 15')+ex('Landmine rainbow','','3 × 10 /c')+ex('Box jump','','4 × 6')}
+ }
+};
+
+function renderRenfo(season, opt){
+  const R = RENFO[season];
+  let h = `<div class="seg" style="margin-bottom:10px"><span class="${season==='ete'?'on':''}" onclick="renderRenfoInto('ete','${opt}')">☀️ Été</span><span class="${season==='hiver'?'on':''}" onclick="renderRenfoInto('hiver','${opt}')">❄️ Hiver</span></div><div class="seg" style="margin-bottom:14px"><span class="${opt==='cali'?'on':''}" onclick="renderRenfoInto('${season}','cali')">Sans matériel</span><span class="${opt==='gym'?'on':''}" onclick="renderRenfoInto('${season}','gym')">Salle</span></div><div class="group" style="margin:0 -16px;border-radius:0">`;
+  for(const k of ['A','B','C','D']){
+    const s = R[k]; const body = (s[opt] ?? s.cali);
+    h += acc(`<b style="color:var(--blue);font-size:19px">${k}</b>`, `${s.t}<small>${s.sub}</small>`, body);
+  }
+  return h+'</div>';
+}
+function renderRenfoInto(season,opt){ document.getElementById('renfo-host').innerHTML = renderRenfo(season,opt); }
+
+const GUIDE_SECTIONS = [
+ {id:'plan',ic:'📅',t:'Plan annuel',b:()=>
+  note('<strong>Structure :</strong> Hiver SB (nov–avr) → Transition (avr) → Été multi-sports + base trail (mai–oct) → Transition (oct). Trail : 3 runs/sem de mai à octobre, sans phase de pic.')+
+  acc('❄️','Janvier – Mars · Hiver SB',kv('Sport','Snowboard — enseignement + perso')+kv('Trail','Arrêté')+kv('Renfo','Version hiver 4j/sem')+kv('Golf','Simulateur si dispo')+kv('⚠️ Whoop','Rouges nov–déc fréquents','r'))+
+  acc('🔄','Avril · Transition',kv('Sem 1–2','Bilan · mobilité · volume −40 %')+kv('Sem 3–4','Reprise trail : 2 footings 30 min → 1 EF 45 min')+kv('Renfo','Transition vers été, 2 séances légères'))+
+  acc('☀️','Mai – Juin',kv('Trail mai','3 runs · 25–30 km · longue 12–16 km / 400–600 D+')+kv('Trail juin','3 runs · 35–40 km · longue 18–22 km / 800–1000 D+')+kv('Enduro','Jeudi soir dès juin — sacré')+kv('Golf','4× /sem : 2 parcours + petit jeu + practice','g'))+
+  acc('🔥','Juillet – Août',kv('Trail juil','40–45 km · longue 22–25 km / 1000–1200 D+ · course test mi-juillet')+kv('Trail août','38–42 km stable · pas de B2B')+kv('⚠️ Cumul','3 rouges consécutifs → couper 1 trail + 1 renfo','y')+kv('Société','Si pic de travail → 2 runs/sem temporairement'))+
+  acc('🍂','Septembre – Octobre',kv('Trail sept','35–40 km · maintien sans pression')+kv('Octobre','Transition · 2 runs max · volume −40 %')+kv('Bilan','Révision du plan trail pour 2027'))+
+  acc('🎿','Novembre – Décembre',kv('Sport','Retour SB · volume progressif')+kv('Renfo','Transition vers version hiver')+kv('⚠️ Déc','Fêtes + cours = pic fatigue','r')+kv('Plan 2027','Construire le plan 55 km en décembre','g'))
+ },
+ {id:'trail',ic:'🏃',t:'Base Trail 2027',b:()=>
+  note('<strong>Pas de course en 2026.</strong> L\'été construit la base pour un 55 km en 2027 : 3 runs/sem, progression douce, longue max 22–25 km, sans pic ni taper.','ok')+
+  `<table class="tbl"><tr><th>Période</th><th>Vol/sem</th><th>Longue</th><th>D+</th></tr>
+  <tr><td class="m">Avr</td><td>10–15</td><td>8–10</td><td>300</td></tr><tr><td class="m">Mai</td><td>25–30</td><td>12–14</td><td>400–600</td></tr><tr><td class="m">Juin</td><td>30–37</td><td>16–20</td><td>600–1000</td></tr><tr><td class="m">Juil</td><td>38–45</td><td>20–25</td><td>1000–1200</td></tr><tr><td class="m">Août</td><td>38–42</td><td>22–25</td><td>1000–1200</td></tr><tr><td class="m">Sept</td><td>32–38</td><td>18–22</td><td>800–1000</td></tr><tr><td class="m">Oct</td><td>15–20</td><td>10–12</td><td>300–500</td></tr></table>`+
+  acc('🏃','Run 1 — EF lundi',kv('Distance','7–10 km')+kv('Allure','Conversationnelle · zone 2')+kv('But','Activer sans fatiguer'))+
+  acc('⚡','Run 2 — Qualité mercredi',kv('Whoop vert','Fractionné : 8×1 min → 5×5 min montée')+kv('Whoop jaune','MTB technique à la place')+kv('Progression','Mai 8×1 · Juin 6×2 · Juil 5×3 montée · Août 4×5 · Sept tempo 30–40 min'))+
+  acc('🏔️','Run 3 — Longue samedi',kv('Distance','12 km (mai) → 22–25 km (juil–août)')+kv('D+','400 → 1000–1200 m')+kv('Bâtons','Dès >800 m · obligatoires >1200 m')+kv('Nutrition','1 gel/40 min si >1h30')+kv('Règle','Ne se sacrifie jamais sauf Whoop rouge','r'))+
+  acc('🎯','Ce que 2027 exigera en plus',kv('Volume pic','55–58 km (B2B)')+kv('Longue max','28–32 km / 1600 D+')+kv('Nutrition race','Gérer 8–10h de gels')+kv('Mental','Passer la zone 35–45 km'))
+ },
+ {id:'golf',ic:'⛳',t:'Golf — 4 séances',b:()=>
+  note('<strong>À index 15–30, les coups se perdent à moins de 100 m et sur le green.</strong> Une heure de petit jeu fait baisser l\'index plus vite qu\'une heure de parcours en plus.','golf')+
+  `<table class="tbl"><tr><th>Jour</th><th>Format</th><th>Charge</th></tr>
+  <tr><td class="m">Mar</td><td>18 trous marchés</td><td class="y">Modéré · 10–12 km</td></tr><tr><td class="m">Mer</td><td>Petit jeu & putting 60–75 min</td><td class="g">Nul</td></tr><tr><td class="m">Jeu</td><td>Practice 45 min max</td><td class="g">Très faible</td></tr><tr><td class="m">Dim</td><td>18 trous marchés</td><td class="y">Modéré</td></tr></table>`+
+  acc('🎯','Faire baisser l\'index',grp('Priorité 1 · Putting — 20 min')+ex('Cercle 8 balles à 1 m','Rentrer les 8 d\'affilée.','')+ex('Longue distance','Dosage : cercle 1 m autour du trou.','')+grp('Priorité 2 · Wedges 30–100 m — 25 min')+ex('10 balles à 50, 70, 90 m','Noter la dispersion. 3 longueurs de swing.','')+grp('Priorité 3 · Chipping & bunker — 20 min')+ex('15 sorties de bunker d\'affilée','Jusqu\'à routine.','')+note('<strong>Noter sur la carte :</strong> fairways touchés /14 · greens en régulation /18 · putts. Sur 5 parcours le point faible devient évident.'))+
+  acc('🚫','Règles de conflit',kv('Jeudi','Practice 45 min max · jamais 18T','r')+kv('Vendredi','Putting seulement · veille de longue','r')+kv('Si Whoop décroche','1er coupé : parcours dimanche → practice jeudi → mardi en 9T')+kv('Jamais coupé','Petit jeu mercredi — coût nul','g')+kv('Vigilance','+20–24 km marche/sem · 2 lundis rouges → dimanche saute','y'))
+ },
+ {id:'renfo',ic:'💪',t:'Renfo 4j — séances détaillées',b:()=>`<div id="renfo-host">${renderRenfo('ete','cali')}</div>`+
+  acc('📋','Principes',kv('Progression cali','Reps → temps sous tension → variante plus dure')+kv('Progression salle','+2,5 kg quand tout passe 2 séances de suite')+kv('Jamais','Charge et volume la même semaine')+kv('Toutes les 4 sem','1 semaine à −30 %')+kv('Whoop 🟡','−30 % volume, pas d\'explosif','y')+kv('Whoop 🔴','Annulé · mobilité','r'))
+ },
+ {id:'mob',ic:'🧘',t:'Mobilité',b:()=>
+  note('15 min régulièrement > 1h une fois par mois. Chaque routine a son moment fixe.')+
+  acc('☀️','Réveil · 10 min',ex('Cat-cow','15 lents','')+ex('Cercles hanches','10/sens','')+ex('Ouverture thoracique','10/côté','')+ex('Cercles chevilles','20/pied','')+ex('Fentes marchées','10/jambe',''))+
+  acc('🏃','Post-trail · 15 min',ex('Mollets au mur','60s/j, tendu puis fléchi','')+ex('Ischios','60s/j','')+ex('Pigeon','90s/côté','')+ex('Quadri debout','45s/j','')+ex('Fascia plantaire','balle 60s/pied',''))+
+  acc('🚵','Post-enduro · 20 min',ex('Foam roller quadri','2 min/j','')+ex('Foam roller IT band','2 min/c','')+ex('Pectoraux au mur','60s/c','')+ex('Extension thoracique','roller 2 min','')+ex('Avant-bras','45s/c',''))+
+  acc('❄️','Post-SB · 15 min',ex('Fléchisseurs hanche','90s/c','')+ex('Cheville genou au mur','20/pied','')+ex('Rotation thoracique','12/c','')+ex('Lombaires','genoux poitrine 90s','')+ex('Décompression épaules','suspension 30s ×2',''))+
+  acc('⛳','Avant golf · 8 min',ex('Rotations thoraciques','15/c, bassin fixe','')+ex('Cercles bras','20/sens','')+ex('Rotation hanche','12/c','')+ex('Swings à vide','15 progressifs',''))+
+  acc('🦵','Dimanche · 30 min',ex('Foam roller complet','12 min','')+ex('Étirements longs','12 min, 90s/position','')+ex('TRX assisté','6 min','')+ex('Pressothérapie','30 min si dispo',''))+
+  note('<strong>Le plus rentable :</strong> foam roller vendredi matin avant Renfo D. À ne jamais sauter.','warn')
+ },
+ {id:'nutri',ic:'🍽️',t:'Nutrition',b:()=>
+  acc('🍳','Jour entraînement · 3590 kcal / 227 g P',kv('07:30 Petit-déj FIXE','860 kcal / P51 — intouchable')+kv('10:30 Boost','Yaourt grec · banane · miel · chia — 310')+kv('13:00 Déjeuner','Poulet · riz · légumes · parmesan — 700 / P48')+kv('16:00 PBJ','Pain complet · beurre cacahuète · confiture — 430')+kv('18:30 Shake','Whey · lait avoine · banane — 360 / P30')+kv('20:00 Dîner','Bœuf/poulet · patate douce · salade — 660')+kv('22:00 Nuit','Fromage blanc · noix · magnésium — 270'),true)+
+  acc('🛌','Jour repos · ~2850 kcal / 180 g P',kv('Principe','Protéines maintenues, glucides réduits')+kv('Supprimer','PBJ et shake post-séance'))+
+  acc('💊','Suppléments',kv('Matin à jeun','KXNGS + Granions collagène I/II')+kv('Post-séance','Whey 30 g')+kv('Soir','Magnésium bisglycinate 300–400 mg')+kv('Hiver','D3 + K2')+kv('Optionnel','Créatine 3–5 g'))+
+  acc('🏔️','En sortie longue',`<table class="tbl"><tr><th>Durée</th><th>Eau/h</th><th>Glucides/h</th><th>Sel</th></tr><tr><td class="m">&lt;45 min</td><td>—</td><td>—</td><td>—</td></tr><tr><td class="m">45–90</td><td>400–500</td><td>0–30 g</td><td>si &gt;20°</td></tr><tr><td class="m">1h30–2h30</td><td>500</td><td>30–45 g</td><td>si &gt;15°</td></tr><tr><td class="m">2h30–4h</td><td>500–600</td><td>45–60 g</td><td>/90 min</td></tr><tr><td class="m">&gt;4h</td><td>600</td><td>60 g</td><td>/90 min</td></tr></table>`+note('Ne jamais attendre la soif. Gels toujours avec de l\'eau.','warn'))
+ },
+ {id:'sleep',ic:'😴',t:'Sommeil',b:()=>
+  kv('Réveil','06:30 – 07:00')+kv('Coucher','22:30 – 23:00')+kv('Minimum','8h')+kv('Exception jeudi','Coucher 23h30 max → vendredi 07:30')+kv('Veille de longue','Coucher 22h30 vendredi — obligatoire','r')+
+  note('<strong>Pattern crash :</strong> 2 nuits &lt;6h30 consécutives → baisser le Strain dès le 2e matin. Ne pas attendre le rouge.','warn')+
+  note('Écrans off 30 min avant. Magnésium 22h. Chambre 18°C. Réveil sans alarme le dimanche.')
+ },
+ {id:'gear',ic:'🎒',t:'Équipement trail',b:()=>
+  `<table class="tbl"><tr><th></th><th class="c">EF &lt;45</th><th class="c">45–90</th><th class="c">Frac.</th><th class="c">L 2–3h</th><th class="c">L &gt;3h</th></tr>
+  <tr><td class="m">🎒 Gilet</td><td class="c n">—</td><td class="c y">⚡</td><td class="c n">—</td><td class="c g">✅</td><td class="c g">✅</td></tr>
+  <tr><td class="m">👟 Ceinture</td><td class="c n">—</td><td class="c g">✅</td><td class="c y">⚡</td><td class="c n">—</td><td class="c n">—</td></tr>
+  <tr><td class="m">🧴 Flask 500</td><td class="c n">—</td><td class="c y">1×</td><td class="c y">1×</td><td class="c g">2×</td><td class="c g">2×</td></tr>
+  <tr><td class="m">🧪 Flask 250</td><td class="c n">—</td><td class="c n">—</td><td class="c n">—</td><td class="c y">⚡</td><td class="c g">✅</td></tr>
+  <tr><td class="m">🧢 Casquette</td><td class="c y">⚡</td><td class="c y">⚡</td><td class="c y">⚡</td><td class="c g">✅</td><td class="c g">✅</td></tr>
+  <tr><td class="m">🕶️ Lunettes</td><td class="c y">⚡</td><td class="c y">⚡</td><td class="c n">—</td><td class="c y">⚡</td><td class="c g">✅</td></tr>
+  <tr><td class="m">💪 Manchons</td><td class="c n">—</td><td class="c y">⚡</td><td class="c n">—</td><td class="c y">⚡</td><td class="c g">✅</td></tr>
+  <tr><td class="m">🧥 Veste</td><td class="c n">—</td><td class="c y">⚡</td><td class="c n">—</td><td class="c y">⚡</td><td class="c g">✅</td></tr>
+  <tr><td class="m">🥢 Bâtons</td><td class="c n">—</td><td class="c n">—</td><td class="c n">—</td><td class="c y">&gt;800 D+</td><td class="c g">&gt;800 D+</td></tr></table>`+
+  note('<strong>Règle montagne :</strong> &gt;2000 m, la veste Evadict est dans le gilet quelle que soit la météo. En cas de doute, prendre la couche.','red')+
+  acc('🌦️','Météo',kv('☀️ &gt;20°','Casquette obligatoire · 600–700 ml/h · sel')+kv('🌤️ 12–20°','Manchons si &lt;14° · veste pliée si &gt;2h')+kv('🌧️ Pluie','Veste portée · casquette · pas de lunettes')+kv('⛈️ Orage','Rebrousser chemin — danger objectif','r')+kv('🌨️ &lt;5°','Veste + manchons + collant · eau tiède'))+
+  acc('🎒','Gilet poche par poche',kv('Avant D','Flask 500 eau pure')+kv('Avant G','Flask 500 eau ou iso')+kv('Petites poches','Gels rotation · sel')+kv('Supérieure','Lunettes · téléphone')+kv('Dos','Veste pliée · manchons · kit secours'))
+ },
+ {id:'check',ic:'✅',t:'Check-list sortie',b:()=>`<div id="check-host"></div>`},
+ {id:'rat',ic:'🔄',t:'Rattrapage — j\'ai loupé une séance',b:()=>`<div id="rat-host"></div>`},
+];
+</script>
+<script>
+/* ═══════════════ STORE ═══════════════ */
+const KEY='masterplan_v2';
+const clone=o=>JSON.parse(JSON.stringify(o));
+let DB;
+function fresh(){return{v:2,settings:{season:'auto',intensity:100,whoopAuto:true,theme:'auto',ai:{key:'',model:'claude-sonnet-5'}},whoop:{},goals:clone(DEFAULT_GOALS),weeks:clone(DEFAULT_WEEKS),done:{},habits:{},habitDefs:clone(DEFAULT_HABITS),notes:{},chat:[]};}
+function load(){
+  try{ const r=localStorage.getItem(KEY)||localStorage.getItem('masterplan_v1'); const o=r?JSON.parse(r):null; DB=o?Object.assign(fresh(),o):fresh(); }
+  catch(e){ DB=fresh(); }
+  DB.settings=Object.assign(fresh().settings,DB.settings||{}); DB.settings.ai=Object.assign({key:'',model:'claude-sonnet-5'},DB.settings.ai||{});
+  for(const k of ['whoop','done','habits','notes']) if(!DB[k]||typeof DB[k]!=='object') DB[k]={};
+  if(!Array.isArray(DB.goals)) DB.goals=clone(DEFAULT_GOALS); if(!Array.isArray(DB.habitDefs)||!DB.habitDefs.length) DB.habitDefs=clone(DEFAULT_HABITS); if(!Array.isArray(DB.chat)) DB.chat=[];
+  if(!DB.weeks||!DB.weeks.ete||!DB.weeks.hiver||!DB.weeks.transition) DB.weeks=clone(DEFAULT_WEEKS);
+  applyTheme();
+}
+function save(){ try{ localStorage.setItem(KEY,JSON.stringify(DB)); }catch(e){ toast('Sauvegarde impossible'); } }
+function applyTheme(){ const t=DB.settings.theme||'auto'; if(t==='auto') document.documentElement.removeAttribute('data-theme'); else document.documentElement.setAttribute('data-theme',t); }
+load();
+
+/* ═══════════════ DATES ═══════════════ */
+const pad=n=>String(n).padStart(2,'0');
+const iso=d=>`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+const today=()=>iso(new Date());
+const parseISO=s=>{const [y,m,d]=String(s).split('-').map(Number);return new Date(y,m-1,d);};
+const dow=s=>(parseISO(s).getDay()+6)%7;
+const fmtDate=s=>parseISO(s).toLocaleDateString('fr-CH',{weekday:'long',day:'numeric',month:'long'});
+const fmtShort=s=>{const d=parseISO(s);return `${pad(d.getDate())}/${pad(d.getMonth()+1)}`;};
+const addDays=(s,n)=>{const d=parseISO(s);d.setDate(d.getDate()+n);return iso(d);};
+const cap=s=>s.charAt(0).toUpperCase()+s.slice(1);
+function seasonFor(s){ if(DB.settings.season!=='auto') return DB.settings.season; const m=parseISO(s).getMonth()+1; if([11,12,1,2,3].includes(m)) return 'hiver'; if(m===4||m===10) return 'transition'; return 'ete'; }
+const SEASON_L={ete:'Été',hiver:'Hiver',transition:'Transition'};
+const esc=s=>String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const CHK='<svg viewBox="0 0 12 12"><path d="M2 6.5l2.6 2.6L10 3.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+/* ═══════════════ WHOOP ENGINE ═══════════════ */
+function zoneFor(d){
+  const w=DB.whoop[d]; if(!w||w.rec==null) return {z:'none',pct:100,why:''};
+  let z,why=[];
+  if(w.rhr!=null&&w.rhr>=60){z='red';why.push(`RHR ${w.rhr} ≥ 60 — rouge automatique`);}
+  else if(w.rec>=66){z='green';why.push(`Recovery ${w.rec} % — récupéré`);}
+  else if(w.rec>=33){z='yellow';why.push(`Recovery ${w.rec} % — partiel`);}
+  else{z='red';why.push(`Recovery ${w.rec} % — non récupéré`);}
+  const p=DB.whoop[addDays(d,-1)];
+  if(z==='green'&&w.sleep!=null&&w.sleep<6.5&&p&&p.sleep!=null&&p.sleep<6.5){z='yellow';why.push('2 nuits < 6h30 — plafonné à jaune');}
+  return {z,pct:z==='green'?100:z==='yellow'?70:0,why:why.join(' · ')};
+}
+function effIntensity(d){ const zz=zoneFor(d); const g=DB.settings.intensity||100; if(!DB.settings.whoopAuto||zz.z==='none') return {pct:g,zone:zz}; return {pct:Math.round(g*zz.pct/100),zone:zz}; }
+function whoopAlerts(){
+  const out=[],t=today(),w=DB.whoop[t];
+  const reds=[0,1,2].map(i=>zoneFor(addDays(t,-i)).z).filter(z=>z==='red').length;
+  if(reds>=3) out.push(['red','⛔','<b>3 rouges consécutifs.</b> Couper une séance trail et un renfo cette semaine.']);
+  if(w&&w.rhr>=60) out.push(['red','💓','<b>RHR ≥ 60.</b> Rouge automatique. Repos ou mobilité douce.']);
+  const s2=[DB.whoop[t],DB.whoop[addDays(t,-1)]].filter(x=>x&&x.sleep!=null);
+  if(s2.length===2&&s2.every(x=>x.sleep<6.5)) out.push(['warn','😴','<b>2 nuits < 6h30.</b> Baisser le Strain dès maintenant.']);
+  const last5=[0,1,2,3,4].map(i=>DB.whoop[addDays(t,-i)]).filter(Boolean);
+  if(last5.length>=5&&last5.every(x=>x.rec!=null&&x.rec<50)) out.push(['warn','📉','<b>5 jours sous 50 %.</b> Surcharge probable. Semaine à −50 %.']);
+  if(!w) out.push(['ok','📊','<b>Whoop du jour non saisi.</b> Le plan tourne à l\'intensité globale.']);
+  return out;
+}
+
+/* ═══════════════ NAV ═══════════════ */
+const ROOT=['jour','whoop','semaine','coach','plus'];
+let navStack=['jour'];
+function show(id){ document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active')); const el=document.getElementById('s-'+id); if(el) el.classList.add('active'); document.getElementById('composer').classList.toggle('show',id==='coach'); window.scrollTo(0,0); }
+function render(id){ const r={jour:renderJour,whoop:renderWhoop,semaine:renderSemaine,coach:renderCoach,plus:renderPlus,objectifs:renderGoals,guide:renderGuide}[id]; if(r){ try{ r(); }catch(e){ console.error(e); toast('Erreur d\'affichage'); } } }
+function go(t){ navStack=[t]; document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b.dataset.t===t)); show(t); render(t); }
+function push(id){ navStack.push(id); show(id); render(id); }
+function back(){ if(navStack.length>1) navStack.pop(); const id=navStack[navStack.length-1]; show(id); render(id); }
+let _tt; function toast(m){ const e=document.getElementById('toast'); e.textContent=m; e.classList.add('show'); clearTimeout(_tt); _tt=setTimeout(()=>e.classList.remove('show'),1800); }
+function openSheet(title,body,opts={}){
+  const left=opts.left||`<button onclick="closeSheet()">Annuler</button>`, right=opts.right||'<span style="min-width:60px"></span>';
+  document.getElementById('sheet-body').innerHTML=`<div class="shead">${left}<h2>${title}</h2>${right}</div><div class="sbody">${body}</div>`;
+  document.getElementById('sheet-bg').classList.add('open'); requestAnimationFrame(()=>document.getElementById('sheet').classList.add('open'));
+}
+function closeSheet(){ document.getElementById('sheet').classList.remove('open'); setTimeout(()=>document.getElementById('sheet-bg').classList.remove('open'),250); }
+const chev='<svg class="chev" viewBox="0 0 8 14"><path d="M1 1l6 6-6 6" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg>';
+const icbox=(t)=>`<span class="ic" style="background:${TYPES[t]?.c||'var(--gray)'}">${TYPES[t]?.ic||'•'}</span>`;
+
+/* ═══════════════ JOUR ═══════════════ */
+let viewDate=today();
+function ring(pct,color){ const r=42,c=2*Math.PI*r; const off=c*(1-Math.max(0,Math.min(100,pct))/100); return `<svg viewBox="0 0 96 96"><circle cx="48" cy="48" r="${r}" stroke="var(--fill)" stroke-width="9" fill="none"/><circle cx="48" cy="48" r="${r}" stroke="${color}" stroke-width="9" fill="none" stroke-linecap="round" stroke-dasharray="${c}" stroke-dashoffset="${off}"/></svg>`; }
+function renderJour(){
+  const d=viewDate,isT=d===today(),sz=seasonFor(d);
+  document.getElementById('j-title').textContent=isT?'Aujourd\'hui':cap(fmtDate(d));
+  document.getElementById('j-sub').textContent=`${isT?cap(fmtDate(d))+' · ':''}${SEASON_L[sz]}`;
+  const mon=addDays(d,-dow(d)); let strip='';
+  for(let i=0;i<7;i++){ const ds=addDays(mon,i),z=zoneFor(ds).z,dc={green:'g',yellow:'y',red:'r'}[z]||''; strip+=`<div class="ws ${ds===d?'sel':''} ${ds===today()?'today':''}" onclick="viewDate='${ds}';renderJour()"><div class="d">${DAYS_S[i].slice(0,3)}</div><div class="n">${parseISO(ds).getDate()}</div><div class="dot ${dc}"></div></div>`; }
+  document.getElementById('j-strip').innerHTML=strip;
+  const w=DB.whoop[d],ei=effIntensity(d),z=ei.zone;
+  let hero;
+  if(!w){ hero=`<div class="hero"><div class="ring">${ring(0,'var(--fill2)')}<div class="val"><b style="color:var(--label3)">—</b><small>REC</small></div></div><div class="bd"><div class="lab" style="color:var(--label2)">Whoop non saisi</div><div class="msg">Saisis ta Recovery du matin pour ajuster les séances.</div><div style="margin-top:10px"><button class="btn sm primary" onclick="openWhoopSheet('${d}')">Saisir</button></div></div></div>`; }
+  else{
+    const col={green:'var(--green)',yellow:'var(--orange)',red:'var(--red)'}[z.z];
+    const lab={green:'Vert · Go',yellow:'Jaune · Adapter',red:'Rouge · Stop'}[z.z];
+    const msg={green:'Séance complète. C\'est le jour pour une séance dure.',yellow:'Intensité réduite à '+ei.pct+' %. Pas de fractionné ni d\'explosif.',red:'Mobilité douce uniquement. Même l\'enduro se reporte.'}[z.z];
+    hero=`<div class="hero" onclick="openWhoopSheet('${d}')"><div class="ring">${ring(w.rec,col)}<div class="val"><b style="color:${col}">${w.rec}</b><small>RECOVERY</small></div></div><div class="bd"><div class="lab" style="color:${col}">${lab}</div><div class="msg">${msg}</div><div class="meta">${w.hrv!=null?`<span>HRV <b>${w.hrv}</b></span>`:''}${w.rhr!=null?`<span>RHR <b>${w.rhr}</b></span>`:''}${w.sleep!=null?`<span>Sommeil <b>${w.sleep} h</b></span>`:''}${w.strain!=null?`<span>Strain <b>${w.strain}</b></span>`:''}</div>${z.why?`<div class="why">${z.why}</div>`:''}</div></div>`;
+  }
+  document.getElementById('j-hero').innerHTML=hero;
+  const day=DB.weeks[sz][dow(d)],done=DB.done[d]||{}; let h='';
+  if(!day.sessions.length) h=`<div class="empty">Jour libre.</div>`;
+  day.sessions.forEach(s=>{
+    const isDone=!!done[s.id],skip=z.z==='red'&&s.skipOnRed; let title=esc(s.title),detail=esc(s.detail);
+    if(s.scalable&&s.vol!=null&&ei.pct!==100&&!skip) title+=` <span class="scaled">· ${Math.round(s.vol*ei.pct/100*10)/10} ${esc(s.unit)}</span>`;
+    if(skip) detail=`<span style="color:var(--red)">Reportée — Whoop rouge. Mobilité 20 min à la place.</span>`;
+    h+=`<div class="cell lead-icon ${isDone?'done':''} ${skip?'skipped':''}"><div class="ck ${isDone?'on g':''}" onclick="toggleDone('${d}','${s.id}')">${CHK}</div>${icbox(s.type)}<div class="bd"><div class="t">${title}</div><div class="s small">${detail}</div></div><div class="ti">${esc(s.time)}</div></div>`;
+  });
+  if(z.z==='red') h+=`<div class="cell lead-icon"><div class="ck ${done._mob?'on g':''}" onclick="toggleDone('${d}','_mob')">${CHK}</div>${icbox('mob')}<div class="bd"><div class="t">Mobilité douce 20 min</div><div class="s small">Remplace tout le reste aujourd'hui.</div></div></div>`;
+  document.getElementById('j-sessions').innerHTML=h;
+  const hd=DB.habits[d]||{}; let hh='',lg='';
+  DB.habitDefs.forEach(hb=>{ hh+=`<div class="cell ${hd[hb.id]?'done':''}" onclick="toggleHabit('${d}','${hb.id}')"><div class="ck ${hd[hb.id]?'on':''}">${CHK}</div><div class="bd"><div class="t">${esc(hb.lb)}</div>${hb.grp!==lg?`<div class="s small">${esc(hb.grp)}</div>`:''}</div>${hb.sport?'<span class="badge">sport</span>':''}</div>`; lg=hb.grp; });
+  document.getElementById('j-habits').innerHTML=hh;
+  const n=document.getElementById('j-note'); n.value=DB.notes[d]||''; n.oninput=()=>{DB.notes[d]=n.value;save();};
+  const act=DB.goals.filter(g=>g.status==='active').slice(0,3);
+  document.getElementById('j-goals').innerHTML=act.length?act.map(g=>`<div class="cell tap lead-icon" onclick="push('objectifs')"><span class="ic" style="background:var(--fill);color:var(--label)">${g.ic}</span><div class="bd"><div class="t">${esc(g.title)}</div><div class="s small">${g.current} / ${g.target} ${esc(g.metric)}</div></div>${chev}</div>`).join(''):`<div class="empty">Aucun objectif actif.</div>`;
+}
+function toggleDone(d,id){ DB.done[d]=DB.done[d]||{}; DB.done[d][id]=!DB.done[d][id]; save(); renderJour(); }
+function toggleHabit(d,id){ DB.habits[d]=DB.habits[d]||{}; DB.habits[d][id]=!DB.habits[d][id]; save(); renderJour(); }
+
+/* ═══════════════ WHOOP ═══════════════ */
+function openWhoopSheet(d){
+  d=d||today(); const w=DB.whoop[d]||{};
+  openSheet('Whoop',`
+  <div class="bigval" id="wf-recv" style="color:var(--green)">${w.rec??60} %</div>
+  <div class="group"><div style="padding:6px 16px 14px"><input type="range" class="slider" id="wf-rec" min="0" max="100" value="${w.rec??60}" oninput="const v=+this.value;const e=document.getElementById('wf-recv');e.textContent=v+' %';e.style.color=v>=66?'var(--green)':v>=33?'var(--orange)':'var(--red)'"></div></div>
+  <div class="group">
+    <div class="frow"><label>Date</label><input type="date" id="wf-date" value="${d}"></div>
+    <div class="frow"><label>HRV</label><input type="number" id="wf-hrv" inputmode="numeric" placeholder="ms" value="${w.hrv??''}"></div>
+    <div class="frow"><label>RHR</label><input type="number" id="wf-rhr" inputmode="numeric" placeholder="bpm" value="${w.rhr??''}"></div>
+    <div class="frow"><label>Sommeil</label><input type="number" id="wf-sleep" inputmode="decimal" step="0.25" placeholder="heures" value="${w.sleep??''}"></div>
+    <div class="frow"><label>Strain</label><input type="number" id="wf-strain" inputmode="decimal" step="0.1" placeholder="—" value="${w.strain??''}"></div>
+    <div class="frow"><label>Note</label><input type="text" id="wf-note" placeholder="Contexte" value="${esc(w.note||'')}"></div>
+  </div>
+  ${DB.whoop[d]?`<button class="btn full red" onclick="delWhoop('${d}')">Supprimer cette entrée</button>`:''}`,
+  {right:`<button class="done" onclick="saveWhoop()">Enregistrer</button>`});
+  const e=document.getElementById('wf-recv'); const v=w.rec??60; e.style.color=v>=66?'var(--green)':v>=33?'var(--orange)':'var(--red)';
+}
+function saveWhoop(){
+  const d=document.getElementById('wf-date').value; if(!/^\d{4}-\d{2}-\d{2}$/.test(d)){ toast('Date invalide'); return; }
+  const num=id=>{const v=document.getElementById(id).value; return v===''?null:Number(v);};
+  DB.whoop[d]={rec:Number(document.getElementById('wf-rec').value),hrv:num('wf-hrv'),rhr:num('wf-rhr'),strain:num('wf-strain'),sleep:num('wf-sleep'),note:document.getElementById('wf-note').value};
+  save(); closeSheet(); toast('Whoop enregistré'); render(navStack[navStack.length-1]);
+}
+function delWhoop(d){ delete DB.whoop[d]; save(); closeSheet(); toast('Supprimé'); render(navStack[navStack.length-1]); }
+function renderWhoop(){
+  document.getElementById('w-alerts').innerHTML=whoopAlerts().map(([c,i,t])=>`<div class="alert ${c}"><span class="i">${i}</span><div>${t}</div></div>`).join('');
+  const days=[...Array(14)].map((_,i)=>addDays(today(),-13+i)),ws=days.map(d=>DB.whoop[d]).filter(Boolean);
+  const avg=k=>{const a=ws.map(w=>w[k]).filter(v=>v!=null);return a.length?Math.round(a.reduce((x,y)=>x+y,0)/a.length*10)/10:'—';};
+  const ra=avg('rec'); document.getElementById('w-stats').innerHTML=`<div class="stat"><div class="v" style="color:${ra==='—'?'var(--label3)':ra>=66?'var(--green)':ra>=33?'var(--orange)':'var(--red)'}">${ra}${ra!=='—'?'%':''}</div><div class="l">Recovery 14 j</div></div><div class="stat"><div class="v">${avg('rhr')}</div><div class="l">RHR moyen</div></div><div class="stat"><div class="v">${avg('sleep')}${avg('sleep')!=='—'?' h':''}</div><div class="l">Sommeil moyen</div></div>`;
+  const W=340,H=120,bw=W/14-5; let svg=`<line x1="0" y1="${H-H*.66}" x2="${W}" y2="${H-H*.66}" stroke="var(--sep)" stroke-dasharray="3,3"/><line x1="0" y1="${H-H*.33}" x2="${W}" y2="${H-H*.33}" stroke="var(--sep)" stroke-dasharray="3,3"/>`;
+  days.forEach((d,i)=>{const w=DB.whoop[d],x=i*(W/14)+2.5; if(!w||w.rec==null){svg+=`<rect x="${x}" y="${H-3}" width="${bw}" height="3" fill="var(--fill2)" rx="1.5"/>`;return;} const h=Math.max(4,H*w.rec/100),c=w.rec>=66?'var(--green)':w.rec>=33?'var(--orange)':'var(--red)'; svg+=`<rect x="${x}" y="${H-h}" width="${bw}" height="${h}" fill="${c}" rx="4"/>`;});
+  document.getElementById('w-chart').innerHTML=svg; document.getElementById('w-chart-lbl').innerHTML=`<span>${fmtShort(days[0])}</span><span>${fmtShort(days[6])}</span><span>${fmtShort(days[13])}</span>`;
+  const rs=days.map(d=>DB.whoop[d]?.rhr).filter(v=>v!=null),mn=rs.length?Math.min(...rs,58)-3:45,mx=rs.length?Math.max(...rs,62)+3:65; const y60=H-(60-mn)/(mx-mn)*H;
+  let s2=`<line x1="0" y1="${y60}" x2="${W}" y2="${y60}" stroke="var(--red)" stroke-opacity=".4" stroke-dasharray="3,3"/>`,pts=[];
+  days.forEach((d,i)=>{const w=DB.whoop[d]; if(!w||w.rhr==null) return; pts.push([i*(W/14)+W/28,H-(w.rhr-mn)/(mx-mn)*H,w.rhr]);});
+  if(pts.length>1) s2+=`<polyline points="${pts.map(p=>p[0]+','+p[1]).join(' ')}" fill="none" stroke="var(--blue)" stroke-width="2.5" stroke-linejoin="round"/>`;
+  pts.forEach(p=>s2+=`<circle cx="${p[0]}" cy="${p[1]}" r="4" fill="${p[2]>=60?'var(--red)':'var(--blue)'}" stroke="var(--card)" stroke-width="2"/>`);
+  document.getElementById('w-chart2').innerHTML=s2;
+  const all=Object.keys(DB.whoop).sort().reverse().slice(0,30); let h='';
+  if(!all.length) h=`<div class="empty">Aucune entrée. Appuie sur ＋ pour saisir ta première Recovery.</div>`;
+  all.forEach(d=>{const w=DB.whoop[d],z=zoneFor(d),c={green:'var(--green)',yellow:'var(--orange)',red:'var(--red)'}[z.z]; h+=`<div class="cell tap" onclick="openWhoopSheet('${d}')"><div class="bd"><div class="t">${cap(fmtDate(d))}</div><div class="s small">${[w.hrv!=null?'HRV '+w.hrv:'',w.rhr!=null?'RHR '+w.rhr:'',w.sleep!=null?w.sleep+' h':'',w.note?esc(w.note):''].filter(Boolean).join(' · ')}</div></div><div class="v" style="color:${c};font-weight:600">${w.rec} %</div></div>`;});
+  document.getElementById('w-list').innerHTML=h;
+}
+
+/* ═══════════════ SEMAINE ═══════════════ */
+let weekView=null;
+function setWeekView(s){ weekView=s; renderSemaine(); }
+function setIntensity(v){ DB.settings.intensity=Number(v); document.getElementById('int-val').textContent=v+' %'; save(); if(document.getElementById('s-semaine').classList.contains('active')) renderDays(); }
+function renderSemaine(){ if(!weekView) weekView=seasonFor(today()); document.querySelectorAll('#sem-seg span').forEach(e=>e.classList.toggle('on',e.dataset.s===weekView)); document.getElementById('int-slider').value=DB.settings.intensity; document.getElementById('int-val').textContent=DB.settings.intensity+' %'; renderDays(); }
+function renderDays(){
+  const wk=DB.weeks[weekView],td=dow(today()),cur=seasonFor(today())===weekView; let h='';
+  wk.forEach((day,i)=>{
+    const lc=day.load>=4?'var(--red)':day.load>=3?'var(--orange)':'var(--green)';
+    h+=`<div class="group-h"><span style="${cur&&i===td?'color:var(--blue);font-weight:600':''}">${DAYS[i]}${cur&&i===td?' · aujourd\'hui':''}</span><span style="display:flex;gap:10px;align-items:center"><span style="color:${lc};font-size:10px;letter-spacing:1px">${'●'.repeat(day.load)}${'○'.repeat(5-day.load)}</span><a onclick="openSessSheet('${weekView}',${i},null)">Ajouter</a></span></div><div class="group">`;
+    if(!day.sessions.length) h+=`<div class="empty" style="padding:16px">Jour libre</div>`;
+    day.sessions.forEach((s,j)=>{ let t=esc(s.title); if(s.scalable&&s.vol!=null&&DB.settings.intensity!==100) t+=` <span class="scaled">· ${Math.round(s.vol*DB.settings.intensity/100*10)/10} ${esc(s.unit)}</span>`; h+=`<div class="cell tap lead-icon" onclick="openSessSheet('${weekView}',${i},${j})">${icbox(s.type)}<div class="bd"><div class="t">${t}</div><div class="s small">${esc(s.detail)}</div></div><div class="ti">${esc(s.time)}</div>${chev}</div>`; });
+    h+=`</div>`;
+  });
+  document.getElementById('sem-days').innerHTML=h;
+}
+function openSessSheet(season,di,si){
+  const s=si==null?S('run','','','09:00'):DB.weeks[season][di].sessions[si];
+  const opts=Object.entries(TYPES).map(([k,v])=>`<option value="${k}" ${s.type===k?'selected':''}>${v.ic} ${v.l}</option>`).join('');
+  openSheet(si==null?'Nouvelle séance':'Séance',`
+  <div class="group-h"><span>${SEASON_L[season]} · ${DAYS[di]}</span></div>
+  <div class="group">
+    <div class="frow"><label>Type</label><select id="sf-type">${opts}</select></div>
+    <div class="frow"><label>Titre</label><input type="text" id="sf-title" value="${esc(s.title)}" placeholder="Run 1/3 · EF"></div>
+    <div class="frow"><label>Heure</label><input type="text" id="sf-time" value="${esc(s.time)}" placeholder="09:00"></div>
+    <div class="frow"><label>Volume</label><input type="number" id="sf-vol" inputmode="decimal" value="${s.vol??''}" placeholder="—"></div>
+    <div class="frow"><label>Unité</label><input type="text" id="sf-unit" value="${esc(s.unit)}" placeholder="km, min"></div>
+    <div class="frow col"><label>Détail</label><textarea id="sf-detail" placeholder="Contenu, consignes…">${esc(s.detail)}</textarea></div>
+  </div>
+  <div class="group">
+    <div class="cell"><div class="bd"><div class="t">Ajustable</div><div class="s small">Le volume suit l'intensité et le Whoop</div></div><div class="sw ${s.scalable?'on':''}" id="sf-scal" onclick="this.classList.toggle('on')"></div></div>
+    <div class="cell"><div class="bd"><div class="t">Reportée si rouge</div><div class="s small">Désactiver pour les rituels</div></div><div class="sw ${s.skipOnRed?'on':''}" id="sf-skip" onclick="this.classList.toggle('on')"></div></div>
+  </div>
+  ${si!=null?`<div class="btnrow" style="margin-bottom:10px"><button class="btn sm" onclick="moveSess('${season}',${di},${si},-1)">↑ Monter</button><button class="btn sm" onclick="moveSess('${season}',${di},${si},1)">↓ Descendre</button></div><button class="btn full red" onclick="delSess('${season}',${di},${si})">Supprimer la séance</button>`:''}`,
+  {right:`<button class="done" onclick="saveSess('${season}',${di},${si==null?'null':si},'${s.id}')">OK</button>`});
+}
+function saveSess(season,di,si,id){
+  const g=i=>document.getElementById(i),v=g('sf-vol').value;
+  const s={id,type:g('sf-type').value,title:g('sf-title').value.trim()||'Séance',detail:g('sf-detail').value.trim(),time:g('sf-time').value.trim()||'—',vol:v===''?null:Number(v),unit:g('sf-unit').value.trim(),scalable:g('sf-scal').classList.contains('on'),skipOnRed:g('sf-skip').classList.contains('on')};
+  const arr=DB.weeks[season][di].sessions; if(si==null) arr.push(s); else arr[si]=s; save(); closeSheet(); toast('Enregistré'); renderDays();
+}
+function delSess(season,di,si){ DB.weeks[season][di].sessions.splice(si,1); save(); closeSheet(); toast('Supprimée'); renderDays(); }
+function moveSess(season,di,si,dir){ const a=DB.weeks[season][di].sessions,j=si+dir; if(j<0||j>=a.length) return; [a[si],a[j]]=[a[j],a[si]]; save(); closeSheet(); renderDays(); }
+function resetWeek(){ if(!confirm(`Réinitialiser la semaine ${SEASON_L[weekView]} aux valeurs du Master Plan ?`)) return; DB.weeks[weekView]=clone(DEFAULT_WEEKS[weekView]); save(); toast('Semaine réinitialisée'); renderDays(); }
+
+/* ═══════════════ OBJECTIFS ═══════════════ */
+function goalPct(g){ if(!g.target) return 0; const lower=/index/i.test(g.metric); if(lower){ const base=DEFAULT_GOALS.find(x=>x.id===g.id)?.current??g.current; const span=Math.max(1,base-g.target); return Math.max(0,Math.min(100,Math.round((base-g.current)/span*100))); } return Math.max(0,Math.min(100,Math.round(g.current/g.target*100))); }
+function renderGoals(){
+  const act=DB.goals.filter(g=>g.status==='active'),arch=DB.goals.filter(g=>g.status!=='active');
+  const card=g=>{const p=goalPct(g),dl=g.deadline?Math.ceil((parseISO(g.deadline)-new Date())/864e5):null; return `<div class="cell tap" onclick="openGoalSheet('${g.id}')" style="flex-direction:column;align-items:stretch;gap:0"><div style="display:flex;align-items:center;gap:10px"><span style="font-size:22px">${g.ic}</span><div class="bd"><div class="t" style="font-weight:600">${esc(g.title)}</div><div class="s small">${esc(g.sport)}${dl!=null&&g.status==='active'?` · ${dl} j`:''}${g.status==='done'?' · Atteint':''}</div></div><span class="v" style="font-weight:600;color:${p>=100?'var(--green)':'var(--label)'}">${p} %</span></div><div class="prog"><i style="width:${p}%;background:${p>=100?'var(--green)':'var(--blue)'}"></i></div><div class="s small" style="margin-top:8px;color:var(--label2)">${g.current} / ${g.target} ${esc(g.metric)}${g.notes?' — '+esc(g.notes):''}</div></div>`;};
+  document.getElementById('g-list').innerHTML=act.length?act.map(card).join(''):`<div class="empty">Aucun objectif actif.</div>`;
+  document.getElementById('g-arch').innerHTML=arch.length?arch.map(card).join(''):`<div class="empty" style="padding:14px">—</div>`;
+}
+function openGoalSheet(id){
+  const g=id?DB.goals.find(x=>x.id===id):{id:'g'+Date.now().toString(36),ic:'🎯',title:'',sport:'',metric:'',target:1,current:0,deadline:'',status:'active',notes:''}; if(!g) return;
+  openSheet(id?'Objectif':'Nouvel objectif',`
+  <div class="group">
+    <div class="frow"><label>Icône</label><input type="text" id="gf-ic" value="${esc(g.ic)}"></div>
+    <div class="frow"><label>Titre</label><input type="text" id="gf-title" value="${esc(g.title)}" placeholder="Titre"></div>
+    <div class="frow"><label>Sport</label><input type="text" id="gf-sport" value="${esc(g.sport)}" placeholder="Trail, Golf…"></div>
+    <div class="frow"><label>Actuel</label><input type="number" id="gf-cur" inputmode="decimal" value="${g.current}"></div>
+    <div class="frow"><label>Cible</label><input type="number" id="gf-tgt" inputmode="decimal" value="${g.target}"></div>
+    <div class="frow"><label>Unité</label><input type="text" id="gf-metric" value="${esc(g.metric)}" placeholder="km, index…"></div>
+    <div class="frow"><label>Échéance</label><input type="date" id="gf-dl" value="${g.deadline||''}"></div>
+    <div class="frow"><label>Statut</label><select id="gf-st"><option value="active" ${g.status==='active'?'selected':''}>Actif</option><option value="done" ${g.status==='done'?'selected':''}>Atteint</option><option value="dropped" ${g.status==='dropped'?'selected':''}>Abandonné</option></select></div>
+    <div class="frow col"><label>Notes</label><textarea id="gf-notes">${esc(g.notes)}</textarea></div>
+  </div>
+  ${id?`<button class="btn full red" onclick="delGoal('${id}')">Supprimer l'objectif</button>`:''}`,
+  {right:`<button class="done" onclick="saveGoal('${g.id}',${!!id})">OK</button>`});
+}
+function saveGoal(id,exists){ const g=i=>document.getElementById(i).value; const o={id,ic:g('gf-ic')||'🎯',sport:g('gf-sport'),title:g('gf-title').trim()||'Objectif',current:Number(g('gf-cur'))||0,target:Number(g('gf-tgt'))||1,metric:g('gf-metric'),deadline:g('gf-dl'),status:g('gf-st'),notes:g('gf-notes')}; if(exists){const i=DB.goals.findIndex(x=>x.id===id); if(i>=0) DB.goals[i]=o; else DB.goals.push(o);} else DB.goals.push(o); save(); closeSheet(); toast('Objectif enregistré'); renderGoals(); }
+function delGoal(id){ DB.goals=DB.goals.filter(x=>x.id!==id); save(); closeSheet(); renderGoals(); }
+
+/* ═══════════════ HABITUDES ═══════════════ */
+function openHabitEditor(){
+  const rows=DB.habitDefs.map((h,i)=>`<div class="cell"><div class="bd"><div class="t">${esc(h.lb)}</div><div class="s small">${esc(h.grp)}</div></div><button class="btn sm red plain" onclick="DB.habitDefs.splice(${i},1);save();openHabitEditor()">Retirer</button></div>`).join('');
+  openSheet('Rituel',`<div class="group">${rows}</div><div class="group-h"><span>Nouvelle habitude</span></div><div class="group"><div class="frow"><label>Libellé</label><input type="text" id="hf-lb" placeholder="…"></div><div class="frow"><label>Groupe</label><input type="text" id="hf-grp" value="🏋️ Sport"></div></div><button class="btn full" onclick="addHabit()">Ajouter</button>`,{left:`<button onclick="closeSheet();renderJour()">Fermer</button>`});
+}
+function addHabit(){ const lb=document.getElementById('hf-lb').value.trim(); if(!lb){toast('Libellé vide');return;} DB.habitDefs.push({id:'h'+Date.now().toString(36),grp:document.getElementById('hf-grp').value.trim()||'Autre',lb,sport:true}); save(); openHabitEditor(); }
+
+/* ═══════════════ GUIDE ═══════════════ */
+let guideTab='plan';
+function renderGuide(){
+  document.getElementById('gd-tabs').innerHTML=GUIDE_SECTIONS.map(s=>`<span class="subtab ${guideTab===s.id?'on':''}" onclick="guideTab='${s.id}';renderGuide()">${s.ic} ${s.t.split(' —')[0]}</span>`).join('');
+  const sec=GUIDE_SECTIONS.find(s=>s.id===guideTab)||GUIDE_SECTIONS[0];
+  document.getElementById('gd-body').innerHTML=`<div class="group" style="padding:0 0 4px"><div class="cell"><div class="bd"><div class="t" style="font-weight:600;font-size:20px">${sec.ic} ${sec.t}</div></div></div><div style="padding:0 16px">${sec.b()}</div></div>`;
+  if(guideTab==='check') renderCheck(); if(guideTab==='rat') renderRat();
+}
+const CHECK=[['📊 Whoop consulté','avant de décider','court,qualite,longue'],['🎒 Gilet Camelbak','aucun ballottement','longue'],['👟 Ceinture Salomon','si > 45 min','court,qualite'],['🧴 Flask 500 ×2','1 avec sel si > 2 h','longue'],['🧪 Flask 250 iso','si > 2 h 30','longue'],['🧢 Casquette','si UV > 3 ou > 18°','court,qualite,longue'],['🕶️ Lunettes','poche supérieure','longue'],['🧥 Veste Evadict','si > 2000 m','longue'],['💪 Manchons','si < 15° au départ','qualite,longue'],['🥢 Bâtons','si > 800 m D+','longue'],['⚡ Gels comptés','1 / 40 min','qualite,longue'],['🧂 Pastilles sel','1 / 90 min si > 15°','longue'],['📱 Téléphone + trace','batterie > 80 %','qualite,longue'],['🩹 Kit secours','ampoules, bande, survie','longue'],['🦶 Pieds','vaseline, ongles courts','longue'],['🎯 Allures connues','avant de partir','qualite']];
+let checkMode='court',checkState={};
+function renderCheck(){ const host=document.getElementById('check-host'); if(!host) return; const items=CHECK.filter(c=>c[2].split(',').includes(checkMode)),n=items.filter(c=>checkState[checkMode+c[0]]).length;
+  host.innerHTML=`<div class="seg" style="margin-bottom:12px"><span class="${checkMode==='court'?'on':''}" onclick="checkMode='court';renderCheck()">EF &lt; 1 h</span><span class="${checkMode==='qualite'?'on':''}" onclick="checkMode='qualite';renderCheck()">Qualité</span><span class="${checkMode==='longue'?'on':''}" onclick="checkMode='longue';renderCheck()">Longue</span></div><div class="group" style="margin:0 -16px">${items.map(c=>`<div class="cell ${checkState[checkMode+c[0]]?'done':''}" onclick="checkState['${checkMode+c[0]}']=!checkState['${checkMode+c[0]}'];renderCheck()"><div class="ck ${checkState[checkMode+c[0]]?'on':''}">${CHK}</div><div class="bd"><div class="t">${c[0]}</div><div class="s small">${c[1]}</div></div></div>`).join('')}</div><div class="prog"><i style="width:${items.length?n/items.length*100:0}%"></i></div><div class="s small" style="margin-top:6px;color:var(--label2)">${n} / ${items.length}${n===items.length&&n>0?' — prêt':''}</div>`; }
+let ratDay='lun',ratSeason=null,ratReason='travail';
+function renderRat(){ const host=document.getElementById('rat-host'); if(!host) return; if(!ratSeason) ratSeason=seasonFor(today())==='hiver'?'hiver':'ete'; const d=RATTRAPAGE[ratDay+'-'+ratSeason],r=RAT_REASON[ratReason]; if(!d||!r) return; const vc={warn:'warn',skip:'',stop:'red',ok:'ok'}[d.v];
+  host.innerHTML=`<div class="seg" style="margin-bottom:10px">${['lun','mar','mer','jeu','ven','sam','dim'].map((k,i)=>`<span class="${ratDay===k?'on':''}" onclick="ratDay='${k}';renderRat()">${DAYS_S[i].slice(0,2)}</span>`).join('')}</div><div class="seg" style="margin-bottom:10px"><span class="${ratSeason==='ete'?'on':''}" onclick="ratSeason='ete';renderRat()">Été</span><span class="${ratSeason==='hiver'?'on':''}" onclick="ratSeason='hiver';renderRat()">Hiver</span></div><div class="frow" style="padding:8px 0;margin-bottom:6px"><label>Raison</label><select onchange="ratReason=this.value;renderRat()">${Object.entries(RAT_REASON).map(([k,v])=>`<option value="${k}" ${ratReason===k?'selected':''}>${v.lb}</option>`).join('')}</select></div><div class="note ${r.cls}">${r.t}</div><div class="note ${vc}"><div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:6px"><strong>${d.t}</strong><span class="pill ${vc==='warn'?'orange':vc==='red'?'red':vc==='ok'?'green':'gray'}">${d.tag}</span></div>${d.s.map((x,i)=>`<div style="display:flex;gap:8px;padding:5px 0;border-top:.5px solid var(--sep)"><span style="color:var(--label3);min-width:18px;font-variant-numeric:tabular-nums">${pad(i+1)}</span><span>${x}</span></div>`).join('')}</div>`; }
+
+/* ═══════════════ PLUS / RÉGLAGES ═══════════════ */
+function renderPlus(){ const k=DB.settings.ai.key; document.getElementById('ai-status').textContent=k?`Connecté · ${DB.settings.ai.model}`:'Clé API non configurée'; }
+function openSettings(){
+  openSheet('Réglages',`
+  <div class="group-h"><span>Saison</span></div><div class="group"><div style="padding:10px 16px"><div class="seg"><span class="${DB.settings.season==='auto'?'on':''}" onclick="setSeason('auto')">Auto</span><span class="${DB.settings.season==='ete'?'on':''}" onclick="setSeason('ete')">Été</span><span class="${DB.settings.season==='hiver'?'on':''}" onclick="setSeason('hiver')">Hiver</span><span class="${DB.settings.season==='transition'?'on':''}" onclick="setSeason('transition')">Trans.</span></div></div></div>
+  <div class="group-f">Auto : nov–mars hiver, avril et octobre transition, mai–sept été. Actuellement ${SEASON_L[seasonFor(today())]}.</div>
+  <div class="group-h"><span>Apparence</span></div><div class="group"><div style="padding:10px 16px"><div class="seg"><span class="${DB.settings.theme==='auto'?'on':''}" onclick="setTheme('auto')">Système</span><span class="${DB.settings.theme==='light'?'on':''}" onclick="setTheme('light')">Clair</span><span class="${DB.settings.theme==='dark'?'on':''}" onclick="setTheme('dark')">Sombre</span></div></div></div>
+  <div class="group"><div class="cell"><div class="bd"><div class="t">Ajustement par le Whoop</div><div class="s small">Vert 100 % · Jaune 70 % · Rouge mobilité</div></div><div class="sw ${DB.settings.whoopAuto?'on':''}" onclick="DB.settings.whoopAuto=!DB.settings.whoopAuto;save();this.classList.toggle('on')"></div></div></div>
+  <div class="group"><div class="cell tap" onclick="closeSheet();setTimeout(openAISettings,260)"><div class="bd"><div class="t">Coach IA</div><div class="s small">${DB.settings.ai.key?'Connecté':'Clé API non configurée'}</div></div>${chev}</div></div>
+  <button class="btn full red" onclick="if(confirm('Tout effacer et revenir au Master Plan initial ?')){localStorage.removeItem(KEY);localStorage.removeItem('masterplan_v1');location.reload();}">Réinitialiser l'app</button>`,
+  {left:`<button onclick="closeSheet();render(navStack[navStack.length-1])">Fermer</button>`});
+}
+function setSeason(s){ DB.settings.season=s; save(); openSettings(); }
+function setTheme(t){ DB.settings.theme=t; save(); applyTheme(); openSettings(); }
+function exportData(){ try{ const b=new Blob([JSON.stringify(DB,null,1)],{type:'application/json'}),a=document.createElement('a'); a.href=URL.createObjectURL(b); a.download=`masterplan-${today()}.json`; document.body.appendChild(a); a.click(); a.remove(); toast('Export lancé'); }catch(e){ toast('Export impossible'); } }
+function importData(inp){ const f=inp.files&&inp.files[0]; if(!f) return; const r=new FileReader(); r.onload=()=>{ try{ const o=JSON.parse(r.result); if(!o.weeks||!o.settings) throw 0; DB=Object.assign(fresh(),o); load(); save(); closeSheet(); toast('Importé'); go('jour'); }catch(e){ toast('Fichier invalide'); } }; r.readAsText(f); inp.value=''; }
+
+/* ═══════════════ COACH IA ═══════════════ */
+const MODELS=[['claude-sonnet-5','Sonnet 5 — recommandé'],['claude-haiku-4-5-20251001','Haiku 4.5 — rapide, économique'],['claude-opus-5','Opus 5 — le plus capable']];
+function openAISettings(){
+  openSheet('Coach IA',`
+  <div class="group-h"><span>Clé API Anthropic</span></div>
+  <div class="group"><div class="frow col"><label>Clé</label><input type="password" id="ai-key" placeholder="sk-ant-…" value="${esc(DB.settings.ai.key)}" autocomplete="off"></div><div class="frow"><label>Modèle</label><select id="ai-model">${MODELS.map(([v,l])=>`<option value="${v}" ${DB.settings.ai.model===v?'selected':''}>${l}</option>`).join('')}</select></div></div>
+  <div class="group-f">La clé reste sur cet appareil et n'est envoyée qu'à api.anthropic.com. Crée-la sur console.anthropic.com → API keys. Coût indicatif : moins d'un centime par question avec Sonnet.</div>
+  <div class="group-h"><span>Ce que le coach sait</span></div>
+  <div class="group"><div class="cell"><div class="bd"><div class="t">Ton plan complet</div><div class="s small">Semaines types, règles Whoop, golf, priorités, rattrapage</div></div></div><div class="cell"><div class="bd"><div class="t">Ton état du jour</div><div class="s small">Whoop d'aujourd'hui et des 14 derniers jours, séances cochées, note</div></div></div><div class="cell"><div class="bd"><div class="t">Tes objectifs</div><div class="s small">Progression et échéances</div></div></div></div>
+  ${DB.settings.ai.key?`<button class="btn full red" onclick="DB.settings.ai.key='';save();closeSheet();toast('Clé supprimée');renderPlus()">Supprimer la clé</button>`:''}`,
+  {right:`<button class="done" onclick="saveAI()">OK</button>`});
+}
+function saveAI(){ DB.settings.ai.key=document.getElementById('ai-key').value.trim(); DB.settings.ai.model=document.getElementById('ai-model').value; save(); closeSheet(); toast(DB.settings.ai.key?'Coach connecté':'Clé retirée'); renderPlus(); if(document.getElementById('s-coach').classList.contains('active')) renderCoach(); }
+
+function buildContext(){
+  const t=today(),sz=seasonFor(t),ei=effIntensity(t),w=DB.whoop[t];
+  const day=DB.weeks[sz][dow(t)],done=DB.done[t]||{};
+  const sessions=day.sessions.map(s=>`- ${s.time} ${TYPES[s.type]?.l||s.type} — ${s.title}${s.vol!=null?` (${s.vol} ${s.unit}${s.scalable?', ajustable':''})`:''}${done[s.id]?' ✅ fait':''}: ${s.detail}`).join('\n');
+  const hist=[...Array(14)].map((_,i)=>addDays(t,-13+i)).map(d=>{const x=DB.whoop[d]; return x?`${d}: rec ${x.rec}%${x.hrv!=null?` hrv ${x.hrv}`:''}${x.rhr!=null?` rhr ${x.rhr}`:''}${x.sleep!=null?` sommeil ${x.sleep}h`:''}${x.note?` (${x.note})`:''}`:null;}).filter(Boolean).join('\n')||'aucune donnée';
+  const goals=DB.goals.filter(g=>g.status==='active').map(g=>`- ${g.title} [${g.sport}] : ${g.current}/${g.target} ${g.metric}${g.deadline?`, échéance ${g.deadline}`:''}. ${g.notes}`).join('\n');
+  const week=DB.weeks[sz].map((d,i)=>`${DAYS[i]}: ${d.sessions.map(s=>s.title).join(' · ')||'libre'}`).join('\n');
+  const habits=DB.habitDefs.map(h=>`${(DB.habits[t]||{})[h.id]?'✅':'☐'} ${h.lb}`).join(', ');
+  return `Tu es le coach personnel d'Arthur Milleville, 30 ans, Crans-Montana (Valais). Snowboarder pro et enseignant, MTB enduro/DH, golf (index 15–30), trail intermédiaire. Directeur d'une école de vélo l'été, vient de lancer une société. Ectomorphe. Whoop : RHR 48–53, VO2max 51–62, WHOOP Age 19–20 été / 24–25 hiver. Points faibles : renfo souvent sauté, nuits 6h–6h30 fréquentes, pas de vrais jours off.
+
+OBJECTIF 2026 : pas de course. Construire la base trail (3 runs/sem mai→oct, longue max 22–25 km) pour un 55 km en sept 2027. Golf 4×/sem. Renfo 4×/sem. Sommeil 8h.
+
+RÈGLES NON NÉGOCIABLES :
+- Whoop : ≥66 % séance complète · 33–65 % intensité −30 %, pas de fractionné · <33 % mobilité seulement, même l'enduro se reporte · RHR ≥60 = rouge automatique · 2 nuits <6h30 = plafonné jaune · 3 rouges consécutifs = couper 1 trail + 1 renfo.
+- Jeudi : gainage 30 min max, practice golf 45 min max, JAMAIS 18 trous — l'enduro du soir est sacré (juin–oct).
+- Vendredi : foam roller 20 min obligatoire avant Renfo D. Pas de 18 trous (veille de longue).
+- Samedi longue = séance clé, se repositionne dimanche, ne se supprime jamais sauf rouge.
+- Ne jamais rattraper en surchargeant le lendemain. Une séance loupée/semaine = zéro perte.
+- Priorités si semaine bousculée (à garder → sacrifiable) : longue samedi > renfo A lundi > renfo D vendredi > run 2 mercredi > renfo B mardi > gainage jeudi > run 1 lundi > golf > MTB dimanche > enduro (irrattrapable).
+- Golf : à index 15–30 les coups se perdent <100 m et sur le green. Petit jeu et putting (mercredi, coût nul) valent plus que des parcours en plus.
+- Nutrition : petit-déj fixe intouchable (3 œufs, bacon, stracciatella 200 g, muesli 50 g, myrtilles = 860 kcal/P51). PBJ à 17h avant enduro. Magnésium 300–400 mg le soir.
+
+AUJOURD'HUI ${t} (${cap(fmtDate(t))}) — saison ${SEASON_L[sz]} — intensité globale ${DB.settings.intensity} %, effective ${ei.pct} % (${ei.zone.z==='none'?'Whoop non saisi':ei.zone.z+' · '+ei.zone.why}).
+Whoop du jour : ${w?`rec ${w.rec}% hrv ${w.hrv??'—'} rhr ${w.rhr??'—'} sommeil ${w.sleep??'—'}h strain ${w.strain??'—'}${w.note?' note: '+w.note:''}`:'non saisi'}
+Séances prévues :
+${sessions||'aucune'}
+Rituel : ${habits}
+Note du jour : ${DB.notes[t]||'—'}
+
+WHOOP 14 JOURS :
+${hist}
+
+SEMAINE TYPE ${SEASON_L[sz].toUpperCase()} :
+${week}
+
+OBJECTIFS ACTIFS :
+${goals||'aucun'}
+
+STYLE : tutoiement, français, direct et précis, pas de flatterie. Réponses courtes (3–8 phrases) sauf demande d'analyse. Tu peux être en désaccord avec Arthur et le dire. Ne jamais recommander quelque chose qui viole les règles ci-dessus ; si Arthur le demande, refuse et explique.
+
+ACTIONS : quand une modification concrète de l'app est pertinente, ajoute à la fin de ta réponse UN bloc exactement ainsi (une seule action par réponse) :
+<action>{"type":"set_intensity","value":80,"label":"Intensité à 80 %"}</action>
+Types possibles : set_intensity {value:50–120} · add_goal {ic,title,sport,metric,target,current,deadline,notes} · log_whoop {date,rec,hrv,rhr,sleep,strain,note} · skip_today {label,reason} (coche les séances du jour comme reportées). N'inclus un bloc que si l'action est vraiment utile et cohérente avec les règles.`;
+}
+const CHIPS=['Que faire aujourd\'hui ?','Analyse mes 14 jours Whoop','Je suis fatigué, adapte ma semaine','J\'ai loupé hier','Prépare ma longue de samedi','Mon golf ne progresse pas'];
+function renderCoach(){
+  const host=document.getElementById('c-chat'),chips=document.getElementById('c-chips');
+  if(!DB.settings.ai.key){ chips.innerHTML=''; host.innerHTML=`<div class="coach-empty"><div class="spark"><svg viewBox="0 0 24 24"><path d="M12 2l1.8 5.4L19 9l-5.2 1.7L12 16l-1.8-5.3L5 9l5.2-1.6L12 2z"/></svg></div><h2>Ton coach IA</h2><p>Il connaît ton plan, ton Whoop et tes objectifs. Il te dit quoi faire aujourd'hui, adapte ta semaine et te contredit quand il faut.</p><div style="margin-top:18px"><button class="btn primary" onclick="openAISettings()">Configurer la clé API</button></div></div>`; document.getElementById('composer').classList.remove('show'); return; }
+  document.getElementById('composer').classList.add('show');
+  chips.innerHTML=CHIPS.map(c=>`<span class="chip" onclick="askChip(this)">${c}</span>`).join('');
+  if(!DB.chat.length){ host.innerHTML=`<div class="coach-empty"><div class="spark"><svg viewBox="0 0 24 24"><path d="M12 2l1.8 5.4L19 9l-5.2 1.7L12 16l-1.8-5.3L5 9l5.2-1.6L12 2z"/></svg></div><h2>Prêt.</h2><p>Pose une question ou choisis une suggestion.</p></div>`; return; }
+  host.innerHTML=DB.chat.map((m,i)=>renderMsg(m,i)).join('');
+  requestAnimationFrame(()=>window.scrollTo(0,document.body.scrollHeight));
+}
+function renderMsg(m,i){
+  if(m.role==='system') return `<div class="msg sys">${esc(m.content)}</div>`;
+  if(m.role==='user') return `<div class="msg u">${esc(m.content)}</div>`;
+  const {text,action}=splitAction(m.content); let a='';
+  if(action&&!m.applied) a=`<div class="act"><div class="bd"><b>${esc(action.label||action.type)}</b>${action.reason?esc(action.reason):'Proposé par le coach'}</div><button class="btn sm primary" onclick="applyAction(${i})">Appliquer</button></div>`;
+  else if(action&&m.applied) a=`<div class="act"><div class="bd"><b>✓ ${esc(action.label||action.type)}</b>Appliqué</div></div>`;
+  return `<div class="msg a">${md(text)}${a}</div>`;
+}
+function md(s){ return esc(s).replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>').replace(/^- (.+)$/gm,'• $1'); }
+function splitAction(c){ const m=String(c).match(/<action>([\s\S]*?)<\/action>/); if(!m) return {text:c,action:null}; let action=null; try{ action=JSON.parse(m[1]); }catch(e){} return {text:c.replace(m[0],'').trim(),action}; }
+function applyAction(i){
+  const m=DB.chat[i]; if(!m) return; const {action}=splitAction(m.content); if(!action){toast('Action invalide');return;}
+  try{
+    if(action.type==='set_intensity'){ const v=Math.max(50,Math.min(120,Number(action.value))); if(isNaN(v)) throw 0; DB.settings.intensity=v; }
+    else if(action.type==='add_goal'){ DB.goals.push({id:'g'+Date.now().toString(36),ic:action.ic||'🎯',title:String(action.title||'Objectif'),sport:String(action.sport||''),metric:String(action.metric||''),target:Number(action.target)||1,current:Number(action.current)||0,deadline:String(action.deadline||''),status:'active',notes:String(action.notes||'')}); }
+    else if(action.type==='log_whoop'){ const d=action.date||today(); if(!/^\d{4}-\d{2}-\d{2}$/.test(d)) throw 0; const n=v=>v==null||v===''?null:Number(v); DB.whoop[d]={rec:Number(action.rec)||0,hrv:n(action.hrv),rhr:n(action.rhr),sleep:n(action.sleep),strain:n(action.strain),note:String(action.note||'')}; }
+    else if(action.type==='skip_today'){ const t=today(),sz=seasonFor(t); DB.done[t]=DB.done[t]||{}; DB.weeks[sz][dow(t)].sessions.forEach(s=>{ if(s.skipOnRed) DB.done[t][s.id]=true; }); DB.notes[t]=(DB.notes[t]?DB.notes[t]+' — ':'')+'Reporté : '+(action.reason||'coach'); }
+    else throw 0;
+    m.applied=true; save(); toast('Appliqué'); renderCoach();
+  }catch(e){ toast('Action impossible'); }
+}
+function newChat(){ if(DB.chat.length&&!confirm('Effacer la conversation ?')) return; DB.chat=[]; save(); renderCoach(); }
+function askChip(el){ document.getElementById('c-input').value=el.textContent; sendChat(); }
+let sending=false;
+async function sendChat(){
+  const inp=document.getElementById('c-input'),q=inp.value.trim(); if(!q||sending) return;
+  if(!DB.settings.ai.key){ openAISettings(); return; }
+  inp.value=''; inp.style.height='auto'; DB.chat.push({role:'user',content:q}); save(); renderCoach();
+  const host=document.getElementById('c-chat'); host.insertAdjacentHTML('beforeend','<div class="typing" id="typing"><i></i><i></i><i></i></div>'); window.scrollTo(0,document.body.scrollHeight);
+  sending=true; document.getElementById('c-send').disabled=true;
+  try{
+    const msgs=DB.chat.filter(m=>m.role==='user'||m.role==='assistant').slice(-20).map(m=>({role:m.role,content:m.content}));
+    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':DB.settings.ai.key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:DB.settings.ai.model,max_tokens:900,system:buildContext(),messages:msgs})});
+    if(!res.ok){ let msg=`Erreur ${res.status}`; if(res.status===401) msg='Clé API invalide. Vérifie-la dans Coach IA.'; else if(res.status===429) msg='Limite atteinte. Réessaie dans une minute.'; else if(res.status===400){ try{ const j=await res.json(); msg='Requête refusée : '+(j.error?.message||'').slice(0,120); }catch(e){} } else if(res.status>=500) msg='Anthropic indisponible. Réessaie.'; throw new Error(msg); }
+    const j=await res.json(); const text=(j.content||[]).filter(b=>b.type==='text').map(b=>b.text).join('\n').trim();
+    if(!text) throw new Error('Réponse vide.');
+    DB.chat.push({role:'assistant',content:text}); if(DB.chat.length>60) DB.chat=DB.chat.slice(-60); save();
+  }catch(e){ DB.chat.push({role:'system',content:(e&&e.message)||'Erreur réseau. Vérifie la connexion.'}); save(); }
+  finally{ sending=false; document.getElementById('c-send').disabled=false; renderCoach(); }
+}
+document.getElementById('c-input').addEventListener('input',function(){ this.style.height='auto'; this.style.height=Math.min(120,this.scrollHeight)+'px'; });
+document.getElementById('c-input').addEventListener('keydown',function(e){ if(e.key==='Enter'&&!e.shiftKey){ e.preventDefault(); sendChat(); } });
+
+/* ═══════════════ INIT ═══════════════ */
+window.addEventListener('error',e=>{ console.error(e.error||e.message); });
+window.addEventListener('unhandledrejection',e=>{ console.error(e.reason); });
+try{ if(navigator.serviceWorker&&typeof navigator.serviceWorker.register==='function') navigator.serviceWorker.register('sw.js').catch(()=>{}); }catch(e){}
+window.MP={get DB(){return DB;},set DB(v){DB=v;},save,load,today,addDays,seasonFor,zoneFor,effIntensity,go,push,back,render,openWhoopSheet,saveWhoop,delWhoop,setIntensity,setWeekView,openSessSheet,saveSess,delSess,moveSess,resetWeek,openGoalSheet,saveGoal,delGoal,openHabitEditor,addHabit,toggleDone,toggleHabit,renderGuide,renderRenfoInto,renderCheck,renderRat,set guideTab(v){guideTab=v;},set checkMode(v){checkMode=v;},setRat(d,s){ratDay=d;ratSeason=s;},openSettings,setSeason,setTheme,exportData,openAISettings,saveAI,buildContext,sendChat,applyAction,newChat,splitAction,get navStack(){return navStack;},set weekView(v){weekView=v;}};
+go('jour');
+</script>
+</body>
+</html>
