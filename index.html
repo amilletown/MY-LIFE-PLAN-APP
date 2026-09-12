@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<title>MASTERPLAN</title>
+<meta name="theme-color" content="#07090c">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="MASTERPLAN">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" href="icon-192.png">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#07090c;--bg2:#0d1117;--bg3:#131920;--bg4:#192028;
+  --line:#1c2a38;--line2:#253646;
+  --text:#ccd8e4;--text2:#5e7a94;--text3:#2e4557;--white:#eef4fa;
+  --snow:#a5f3fc;--mtb:#86efac;--golf:#bef264;--trail:#f9a8d4;--renfo:#c084fc;--mob:#67e8f9;--nutri:#fbbf24;--sleep:#818cf8;--blue:#60a5fa;
+  --ok:#4ade80;--warn:#fbbf24;--red:#f87171;
+  --sat:env(safe-area-inset-top);--sab:env(safe-area-inset-bottom);
+  --tabh:64px;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased;overscroll-behavior-y:none;}
+body{padding-top:var(--sat);}
+button,input,select,textarea{font-family:inherit;font-size:inherit;color:inherit;}
+button{background:none;border:none;cursor:pointer;}
+h1,h2,h3,h4{font-family:'Barlow Condensed',sans-serif;font-weight:700;color:var(--white);line-height:1.15;}
+.mono{font-family:'Barlow Condensed',sans-serif;font-weight:600;letter-spacing:.5px;}
+
+/* ── APP SHELL ── */
+#app{min-height:100vh;padding-bottom:calc(var(--tabh) + var(--sab) + 16px);}
+.screen{display:none;padding:14px 16px 24px;animation:fade .18s ease;}
+.screen.active{display:block;}
+@keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:6px 0 12px;}
+.topbar h1{font-size:26px;letter-spacing:-.3px;}
+.topbar .sub{font-size:12px;color:var(--text2);margin-top:1px;}
+.iconbtn{width:38px;height:38px;border-radius:10px;background:var(--bg3);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:17px;color:var(--text);}
+.iconbtn:active{background:var(--bg4);}
+
+/* ── TAB BAR ── */
+.tabbar{position:fixed;left:0;right:0;bottom:0;height:calc(var(--tabh) + var(--sab));padding-bottom:var(--sab);background:rgba(13,17,23,.94);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid var(--line);display:flex;z-index:100;}
+.tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:var(--text3);font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;transition:color .15s;}
+.tab .ic{font-size:21px;line-height:1;filter:grayscale(1) opacity(.55);transition:all .15s;}
+.tab.active{color:var(--white);}
+.tab.active .ic{filter:none;transform:translateY(-1px);}
+
+/* ── CARDS ── */
+.card{background:var(--bg2);border:1px solid var(--line);border-radius:14px;overflow:hidden;margin-bottom:12px;}
+.card-h{padding:12px 14px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px;}
+.card-h h3{font-size:17px;flex:1;}
+.card-h .lbl{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text3);}
+.card-b{padding:12px 14px;}
+.card-b p{font-size:13px;color:var(--text2);line-height:1.6;}
+.card.flat{background:transparent;border:none;border-radius:0;}
+
+/* ── PILLS / BADGES ── */
+.pill{display:inline-flex;align-items:center;gap:6px;font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;padding:5px 10px;border-radius:999px;border:1px solid;white-space:nowrap;}
+.pill.ok{color:var(--ok);border-color:#14532d;background:rgba(74,222,128,.08);}
+.pill.warn{color:var(--warn);border-color:#78350f;background:rgba(251,191,36,.08);}
+.pill.red{color:var(--red);border-color:#4a1515;background:rgba(248,113,113,.08);}
+.pill.grey{color:var(--text2);border-color:var(--line2);}
+.pill.blue{color:var(--blue);border-color:#1e3a5f;background:rgba(96,165,250,.08);}
+.tag{font-family:'Barlow Condensed',sans-serif;font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:3px 7px;border-radius:5px;border:1px solid;white-space:nowrap;}
+.t-run{color:var(--trail);border-color:#5a1530;} .t-renfo{color:var(--renfo);border-color:#3d1660;} .t-golf{color:var(--golf);border-color:#2d4800;}
+.t-mtb{color:var(--mtb);border-color:#0f4226;} .t-sb{color:var(--snow);border-color:#0c3d4a;} .t-mob{color:var(--mob);border-color:#0a3f4a;}
+.t-nutri{color:var(--nutri);border-color:#6b2d00;} .t-rest{color:var(--text3);border-color:var(--line2);} .t-whoop{color:var(--sleep);border-color:#282060;}
+
+/* ── WHOOP HERO ── */
+.whoop-hero{border-radius:16px;padding:16px;margin-bottom:12px;border:1px solid;position:relative;overflow:hidden;}
+.whoop-hero::before{content:'';position:absolute;inset:0;opacity:.08;pointer-events:none;}
+.whoop-hero.z-green{border-color:#14532d;background:linear-gradient(135deg,rgba(74,222,128,.10),rgba(74,222,128,.02));}
+.whoop-hero.z-yellow{border-color:#78350f;background:linear-gradient(135deg,rgba(251,191,36,.10),rgba(251,191,36,.02));}
+.whoop-hero.z-red{border-color:#4a1515;background:linear-gradient(135deg,rgba(248,113,113,.10),rgba(248,113,113,.02));}
+.whoop-hero.z-none{border-color:var(--line);background:var(--bg2);}
+.wh-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+.wh-big{font-family:'Barlow Condensed',sans-serif;font-size:44px;font-weight:800;line-height:1;}
+.wh-big small{font-size:18px;font-weight:600;color:var(--text2);margin-left:2px;}
+.wh-meta{display:flex;gap:14px;margin-top:6px;}
+.wh-meta div{font-size:12px;color:var(--text2);}
+.wh-meta b{color:var(--text);font-weight:600;}
+.wh-msg{font-size:13px;color:var(--text);margin-top:10px;line-height:1.5;}
+.wh-msg strong{color:var(--white);}
+.wh-cta{margin-top:10px;display:flex;gap:8px;}
+
+/* ── BUTTONS ── */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:11px 16px;border-radius:11px;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;letter-spacing:1px;text-transform:uppercase;border:1px solid var(--line2);background:var(--bg3);color:var(--text);transition:all .12s;}
+.btn:active{transform:scale(.97);background:var(--bg4);}
+.btn.primary{background:var(--blue);color:#07090c;border-color:var(--blue);}
+.btn.danger{color:var(--red);border-color:#4a1515;}
+.btn.ghost{background:transparent;}
+.btn.sm{padding:8px 12px;font-size:12px;border-radius:9px;}
+.btn.full{width:100%;}
+.btn.blk{width:100%;margin-top:8px;}
+
+/* ── SESSION ROWS ── */
+.sess{display:flex;align-items:flex-start;gap:12px;padding:12px 14px;border-bottom:1px solid var(--line);}
+.sess:last-child{border-bottom:none;}
+.sess .chk{width:24px;height:24px;border-radius:8px;border:1.5px solid var(--line2);background:var(--bg3);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--ok);margin-top:1px;transition:all .15s;}
+.sess.done .chk{background:rgba(74,222,128,.15);border-color:var(--ok);}
+.sess.done .sess-t{text-decoration:line-through;color:var(--text2);}
+.sess .ic{font-size:20px;flex-shrink:0;width:26px;text-align:center;}
+.sess .bd{flex:1;min-width:0;}
+.sess-t{font-weight:600;font-size:15px;color:var(--white);}
+.sess-d{font-size:12px;color:var(--text2);margin-top:2px;line-height:1.45;}
+.sess-time{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:600;color:var(--text3);flex-shrink:0;padding-top:2px;}
+.sess.skipped{opacity:.45;}
+.sess .scaled{color:var(--warn);font-weight:600;}
+.sess .edit{color:var(--text3);font-size:16px;padding:2px 4px;}
+
+/* ── HABITS ── */
+.habit{display:flex;align-items:center;gap:12px;padding:10px 14px;border-bottom:1px solid var(--line);}
+.habit:last-child{border-bottom:none;}
+.habit .chk{width:22px;height:22px;border-radius:7px;border:1.5px solid var(--line2);background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--ok);flex-shrink:0;}
+.habit.done .chk{background:rgba(74,222,128,.15);border-color:var(--ok);}
+.habit.done .lb{color:var(--text2);text-decoration:line-through;}
+.habit .lb{flex:1;font-size:14px;}
+.habit .grp{font-family:'Barlow Condensed',sans-serif;font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text3);}
+.habit-hdr{padding:8px 14px 4px;font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text3);background:var(--bg);}
+
+/* ── FORMS ── */
+.field{margin-bottom:12px;}
+.field label{display:block;font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text2);margin-bottom:6px;}
+.field input[type=text],.field input[type=number],.field input[type=date],.field select,.field textarea{width:100%;background:var(--bg3);border:1px solid var(--line2);border-radius:10px;padding:11px 12px;color:var(--white);font-size:15px;outline:none;-webkit-appearance:none;}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--blue);}
+.field textarea{min-height:70px;resize:vertical;}
+.field .hint{font-size:11px;color:var(--text3);margin-top:4px;}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;}
+.slider{-webkit-appearance:none;width:100%;height:6px;border-radius:3px;background:var(--line2);outline:none;}
+.slider::-webkit-slider-thumb{-webkit-appearance:none;width:26px;height:26px;border-radius:50%;background:var(--white);border:3px solid var(--blue);box-shadow:0 2px 8px rgba(0,0,0,.4);}
+.slider.rec::-webkit-slider-thumb{border-color:var(--ok);}
+.sliderval{font-family:'Barlow Condensed',sans-serif;font-size:32px;font-weight:800;color:var(--white);text-align:center;margin:4px 0 6px;}
+.segs{display:flex;background:var(--bg3);border:1px solid var(--line);border-radius:11px;padding:3px;gap:3px;}
+.seg{flex:1;text-align:center;padding:8px 6px;border-radius:8px;font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text2);}
+.seg.active{background:var(--bg4);color:var(--white);box-shadow:0 1px 3px rgba(0,0,0,.4);}
+.toggle{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--line);}
+.toggle:last-child{border-bottom:none;}
+.toggle .tl{font-size:14px;color:var(--white);}
+.toggle .ts{font-size:12px;color:var(--text2);margin-top:1px;}
+.sw{width:46px;height:28px;border-radius:14px;background:var(--line2);position:relative;transition:background .15s;flex-shrink:0;}
+.sw::after{content:'';position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:var(--white);transition:transform .15s;}
+.sw.on{background:var(--ok);} .sw.on::after{transform:translateX(18px);}
+
+/* ── SHEET (bottom modal) ── */
+.sheet-bg{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:200;display:none;backdrop-filter:blur(3px);}
+.sheet-bg.open{display:block;}
+.sheet{position:fixed;left:0;right:0;bottom:0;background:var(--bg2);border-top:1px solid var(--line2);border-radius:20px 20px 0 0;padding:14px 16px calc(20px + var(--sab));z-index:201;max-height:88vh;overflow-y:auto;transform:translateY(100%);transition:transform .22s cubic-bezier(.2,.8,.2,1);}
+.sheet.open{transform:none;}
+.sheet .grab{width:38px;height:4px;border-radius:2px;background:var(--line2);margin:0 auto 14px;}
+.sheet h2{font-size:22px;margin-bottom:12px;}
+.sheet-actions{display:flex;gap:8px;margin-top:14px;}
+.sheet-actions .btn{flex:1;}
+
+/* ── WEEK ── */
+.dayhdr{display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--bg3);border-bottom:1px solid var(--line);}
+.dayhdr .dn{font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;color:var(--white);flex:1;}
+.dayhdr .load{font-size:10px;letter-spacing:1px;}
+.dayhdr.today{background:rgba(96,165,250,.10);border-color:#1e3a5f;}
+.dayhdr .add{font-size:20px;color:var(--text2);padding:0 4px;}
+.weekstrip{display:flex;gap:6px;margin:10px 0 12px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px;}
+.weekstrip::-webkit-scrollbar{display:none;}
+.ws{flex:1;min-width:44px;text-align:center;padding:8px 4px;border-radius:10px;background:var(--bg2);border:1px solid var(--line);}
+.ws .d{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text3);}
+.ws .n{font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;color:var(--text);margin-top:2px;}
+.ws .dot{width:6px;height:6px;border-radius:50%;margin:5px auto 0;background:var(--line2);}
+.ws.today{border-color:var(--blue);background:rgba(96,165,250,.08);}
+.ws.today .n{color:var(--blue);}
+.ws .dot.g{background:var(--ok);} .ws .dot.y{background:var(--warn);} .ws .dot.r{background:var(--red);}
+
+/* ── GOALS ── */
+.goal{padding:14px;border-bottom:1px solid var(--line);}
+.goal:last-child{border-bottom:none;}
+.goal-t{display:flex;align-items:flex-start;gap:10px;}
+.goal-t .ic{font-size:22px;}
+.goal-t h4{font-size:16px;flex:1;color:var(--white);font-weight:600;}
+.goal-m{font-size:12px;color:var(--text2);margin-top:4px;line-height:1.5;}
+.prog{height:6px;background:var(--line);border-radius:3px;margin-top:10px;overflow:hidden;}
+.prog i{display:block;height:100%;border-radius:3px;background:var(--blue);transition:width .3s;}
+.goal-f{display:flex;align-items:center;justify-content:space-between;margin-top:8px;font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:600;color:var(--text3);letter-spacing:.5px;}
+
+/* ── GUIDE ── */
+.acc{border-bottom:1px solid var(--line);}
+.acc:last-child{border-bottom:none;}
+.acc-h{display:flex;align-items:center;gap:12px;padding:14px;cursor:pointer;user-select:none;}
+.acc-h .ic{font-size:20px;width:26px;text-align:center;}
+.acc-h h4{font-size:16px;flex:1;color:var(--white);font-weight:600;}
+.acc-h .arr{width:9px;height:9px;border-right:2px solid var(--text3);border-bottom:2px solid var(--text3);transform:rotate(45deg);transition:transform .2s;}
+.acc.open .acc-h .arr{transform:rotate(-135deg);}
+.acc-b{display:none;padding:0 14px 14px;}
+.acc.open .acc-b{display:block;}
+.acc-b p{font-size:13px;color:var(--text2);line-height:1.6;margin-bottom:8px;}
+.acc-b p strong{color:var(--text);}
+.kv{display:flex;justify-content:space-between;gap:12px;padding:7px 0;border-bottom:1px solid var(--line);font-size:13px;}
+.kv:last-child{border-bottom:none;}
+.kv .k{color:var(--text2);flex-shrink:0;}
+.kv .v{color:var(--white);font-weight:500;text-align:right;}
+.kv .v.g{color:var(--ok);} .kv .v.y{color:var(--warn);} .kv .v.r{color:var(--red);}
+.note{background:var(--bg3);border:1px solid var(--line);border-left:3px solid var(--blue);border-radius:9px;padding:10px 12px;font-size:12px;color:var(--text2);line-height:1.55;margin:8px 0;}
+.note strong{color:var(--white);}
+.note.warn{border-left-color:var(--warn);} .note.red{border-left-color:var(--red);} .note.ok{border-left-color:var(--ok);} .note.golf{border-left-color:var(--golf);}
+.ex{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--line);font-size:13px;}
+.ex:last-child{border-bottom:none;}
+.ex .n{flex:1;}
+.ex .n b{color:var(--white);font-weight:600;display:block;}
+.ex .n span{font-size:11px;color:var(--text2);display:block;margin-top:1px;line-height:1.4;}
+.ex .s{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;color:var(--blue);white-space:nowrap;text-align:right;min-width:60px;}
+.ex-grp{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text3);margin:12px 0 4px;padding-bottom:4px;border-bottom:1px solid var(--line);}
+.subtabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;}
+.subtab{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:7px 11px;border-radius:8px;border:1px solid var(--line2);background:var(--bg3);color:var(--text2);}
+.subtab.active{color:var(--white);border-color:#1e3a5f;background:rgba(96,165,250,.1);}
+.tbl{width:100%;border-collapse:collapse;font-size:12px;margin:8px 0;}
+.tbl th{font-family:'Barlow Condensed',sans-serif;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3);text-align:left;padding:7px 8px;border-bottom:1px solid var(--line);}
+.tbl td{padding:8px;border-bottom:1px solid var(--line);vertical-align:top;line-height:1.4;}
+.tbl tr:last-child td{border-bottom:none;}
+.tbl .m{font-family:'Barlow Condensed',sans-serif;font-weight:700;color:var(--white);white-space:nowrap;}
+.tbl .c{text-align:center;} .tbl .g{color:var(--ok);font-weight:600;} .tbl .y{color:var(--warn);} .tbl .n{color:var(--text3);}
+
+/* ── CHART ── */
+.chart{width:100%;height:110px;display:block;}
+.chart-lbl{display:flex;justify-content:space-between;font-family:'Barlow Condensed',sans-serif;font-size:10px;color:var(--text3);letter-spacing:1px;margin-top:4px;}
+
+/* ── LISTS ── */
+.li{display:flex;align-items:center;gap:12px;padding:11px 14px;border-bottom:1px solid var(--line);}
+.li:last-child{border-bottom:none;}
+.li .bd{flex:1;min-width:0;}
+.li .t{font-size:14px;color:var(--white);font-weight:500;}
+.li .s{font-size:12px;color:var(--text2);margin-top:1px;}
+.li .r{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:16px;}
+
+.empty{text-align:center;padding:28px 16px;color:var(--text3);font-size:13px;line-height:1.6;}
+.empty .big{font-size:36px;margin-bottom:8px;}
+.toast{position:fixed;left:50%;bottom:calc(var(--tabh) + var(--sab) + 14px);transform:translateX(-50%) translateY(20px);background:var(--bg4);border:1px solid var(--line2);color:var(--white);padding:10px 16px;border-radius:12px;font-size:13px;font-weight:500;z-index:300;opacity:0;transition:all .2s;pointer-events:none;box-shadow:0 6px 24px rgba(0,0,0,.4);}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+.sec-t{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--text3);margin:16px 0 8px;display:flex;align-items:center;justify-content:space-between;}
+.sec-t .act{color:var(--blue);font-size:11px;letter-spacing:1px;}
+.stat3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px;}
+.stat{background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:10px 12px;}
+.stat .v{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:800;color:var(--white);line-height:1;}
+.stat .l{font-family:'Barlow Condensed',sans-serif;font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3);margin-top:3px;}
+.jour-note textarea{min-height:56px;}
+.alert{display:flex;gap:10px;padding:10px 12px;border-radius:10px;border:1px solid;font-size:12px;line-height:1.5;margin-bottom:8px;}
+.alert.red{border-color:#4a1515;background:rgba(248,113,113,.07);color:var(--text);} .alert.red b{color:var(--red);}
+.alert.warn{border-color:#78350f;background:rgba(251,191,36,.07);color:var(--text);} .alert.warn b{color:var(--warn);}
+.alert.ok{border-color:#14532d;background:rgba(74,222,128,.07);color:var(--text);} .alert.ok b{color:var(--ok);}
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- ══ JOUR ══ -->
+  <section id="s-jour" class="screen active">
+    <div class="topbar">
+      <div><h1 id="j-title">Aujourd'hui</h1><div class="sub" id="j-sub"></div></div>
+      <button class="iconbtn" onclick="openSettings()">⚙️</button>
+    </div>
+    <div class="weekstrip" id="j-strip"></div>
+    <div id="j-whoop"></div>
+    <div class="sec-t"><span>Séances du jour</span><span class="act" onclick="go('semaine')">Modifier ›</span></div>
+    <div class="card" id="j-sessions"></div>
+    <div class="sec-t"><span>Rituel du jour</span><span class="act" onclick="openHabitEditor()">Éditer ›</span></div>
+    <div class="card" id="j-habits"></div>
+    <div class="sec-t"><span>Note du jour</span></div>
+    <div class="card jour-note"><div class="card-b"><div class="field" style="margin:0"><textarea id="j-note" placeholder="Ressenti, jambes, contexte…"></textarea></div></div></div>
+  </section>
+
+  <!-- ══ WHOOP ══ -->
+  <section id="s-whoop" class="screen">
+    <div class="topbar"><div><h1>Whoop</h1><div class="sub">Saisie quotidienne et tendances</div></div><button class="iconbtn" onclick="openWhoopSheet()">＋</button></div>
+    <div id="w-alerts"></div>
+    <div class="stat3" id="w-stats"></div>
+    <div class="card"><div class="card-h"><span class="lbl">Recovery · 14 jours</span></div><div class="card-b"><svg class="chart" id="w-chart" viewBox="0 0 340 110" preserveAspectRatio="none"></svg><div class="chart-lbl" id="w-chart-lbl"></div></div></div>
+    <div class="card"><div class="card-h"><span class="lbl">RHR · 14 jours</span></div><div class="card-b"><svg class="chart" id="w-chart2" viewBox="0 0 340 110" preserveAspectRatio="none"></svg></div></div>
+    <div class="sec-t"><span>Historique</span></div>
+    <div class="card" id="w-list"></div>
+    <div class="card"><div class="card-h"><span class="lbl">Règles de lecture</span></div><div class="card-b">
+      <div class="kv"><span class="k">🟢 Recovery ≥ 66 %</span><span class="v g">Séance complète · 100 %</span></div>
+      <div class="kv"><span class="k">🟡 33 – 65 %</span><span class="v y">Intensité −30 % · pas de fractionné</span></div>
+      <div class="kv"><span class="k">🔴 &lt; 33 %</span><span class="v r">Mobilité uniquement · enduro annulé</span></div>
+      <div class="kv"><span class="k">💓 RHR ≥ 60</span><span class="v r">Rouge automatique</span></div>
+      <div class="kv"><span class="k">😴 2 nuits &lt; 6h30</span><span class="v y">Plafonné à jaune</span></div>
+    </div></div>
+  </section>
+
+  <!-- ══ SEMAINE ══ -->
+  <section id="s-semaine" class="screen">
+    <div class="topbar"><div><h1>Semaine type</h1><div class="sub">Modèle par saison · modifiable</div></div><button class="iconbtn" onclick="resetWeek()" title="Réinitialiser">↺</button></div>
+    <div class="segs" id="sem-segs">
+      <div class="seg" data-s="ete" onclick="setWeekView('ete')">☀️ Été</div>
+      <div class="seg" data-s="hiver" onclick="setWeekView('hiver')">❄️ Hiver</div>
+      <div class="seg" data-s="transition" onclick="setWeekView('transition')">🔄 Transition</div>
+    </div>
+    <div class="card" style="margin-top:12px"><div class="card-b">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px"><span class="lbl" style="font-family:'Barlow Condensed';font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--text3);font-weight:700">Intensité globale</span><span class="mono" id="int-val" style="font-size:22px;color:var(--white)">100 %</span></div>
+      <input type="range" class="slider" id="int-slider" min="50" max="120" step="5" value="100" oninput="setIntensity(this.value)">
+      <div class="field" style="margin:6px 0 0"><div class="hint">S'applique aux volumes des séances marquées « ajustables » (km, séries, durées). Combinée au Whoop du jour.</div></div>
+    </div></div>
+    <div id="sem-days"></div>
+  </section>
+
+  <!-- ══ OBJECTIFS ══ -->
+  <section id="s-objectifs" class="screen">
+    <div class="topbar"><div><h1>Objectifs</h1><div class="sub">Ce que 2026 construit pour 2027</div></div><button class="iconbtn" onclick="openGoalSheet()">＋</button></div>
+    <div class="card" id="g-list"></div>
+    <div class="sec-t"><span>Archivés</span></div>
+    <div class="card" id="g-arch"></div>
+  </section>
+
+  <!-- ══ GUIDE ══ -->
+  <section id="s-guide" class="screen">
+    <div class="topbar"><div><h1>Guide</h1><div class="sub">Master Plan + Guide Terrain</div></div></div>
+    <div class="subtabs" id="gd-tabs"></div>
+    <div id="gd-body"></div>
+  </section>
+
+</div>
+
+<!-- TAB BAR -->
+<nav class="tabbar">
+  <button class="tab active" data-t="jour" onclick="go('jour')"><span class="ic">🏠</span>Jour</button>
+  <button class="tab" data-t="whoop" onclick="go('whoop')"><span class="ic">📊</span>Whoop</button>
+  <button class="tab" data-t="semaine" onclick="go('semaine')"><span class="ic">🗓️</span>Semaine</button>
+  <button class="tab" data-t="objectifs" onclick="go('objectifs')"><span class="ic">🎯</span>Objectifs</button>
+  <button class="tab" data-t="guide" onclick="go('guide')"><span class="ic">📚</span>Guide</button>
+</nav>
+
+<!-- SHEET -->
+<div class="sheet-bg" id="sheet-bg" onclick="closeSheet()"></div>
+<div class="sheet" id="sheet"><div class="grab"></div><div id="sheet-body"></div></div>
+<div class="toast" id="toast"></div>
+<script>
+/* ═══════════════════════════════════════════════
+   DEFAULT DATA — semaines types, habitudes, objectifs
+   ═══════════════════════════════════════════════ */
+const DAYS = ['Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi','Dimanche'];
+const DAYS_S = ['LUN','MAR','MER','JEU','VEN','SAM','DIM'];
+const TYPES = {
+  run:{ic:'🏃',l:'Course',cls:'t-run'}, renfo:{ic:'💪',l:'Renfo',cls:'t-renfo'}, golf:{ic:'⛳',l:'Golf',cls:'t-golf'},
+  mtb:{ic:'🚵',l:'MTB',cls:'t-mtb'}, sb:{ic:'❄️',l:'Snowboard',cls:'t-sb'}, mob:{ic:'🧘',l:'Mobilité',cls:'t-mob'},
+  nutri:{ic:'🍽️',l:'Nutrition',cls:'t-nutri'}, rest:{ic:'🛌',l:'Repos',cls:'t-rest'}, whoop:{ic:'📊',l:'Whoop',cls:'t-whoop'}
+};
+let _id = 0; const nid = () => 's' + Date.now().toString(36) + (_id++).toString(36);
+const S = (type,title,detail,time,opts={}) => Object.assign({id:nid(),type,title,detail,time,scalable:false,skipOnRed:true,vol:null,unit:''},opts);
+
+const DEFAULT_WEEKS = {
+  ete: [
+    {load:3,sessions:[
+      S('whoop','Whoop check','Recovery · HRV · RHR · sommeil → décide l\'intensité du jour','06:30',{skipOnRed:false}),
+      S('nutri','Petit-déjeuner fixe','3 œufs · bacon · stracciatella 200g · muesli 50g · myrtilles — 860 kcal / P51','07:30',{skipOnRed:false}),
+      S('run','Run 1/3 · EF','Endurance fondamentale · zone 2 · terrain plat à vallonné','09:00',{scalable:true,vol:8,unit:'km'}),
+      S('renfo','Renfo A — Jambes MTB/Trail','Nordic curl · squat excentrique 5s · single-leg RDL · fentes bulgares · hip thrust · step-up · balance board','10:30',{scalable:true,vol:65,unit:'min'}),
+    ]},
+    {load:3,sessions:[
+      S('golf','Parcours 1/2 — 18 trous marchés','~10–12 km de marche · activation golf 15 min avant · noter fairways / GIR / putts','08:30',{vol:18,unit:'trous'}),
+      S('renfo','Renfo B — Golf & haut du corps','Landmine rainbow · wood chop · weighted pull-ups · TRX rows · farmer\'s carry · face pull','15:00',{scalable:true,vol:55,unit:'min'}),
+    ]},
+    {load:3,sessions:[
+      S('whoop','Décision du matin','🟢 fractionné trail · 🟡 EF ou MTB · 🔴 mobilité seulement','06:30',{skipOnRed:false}),
+      S('run','Run 2/3 · Fractionné (ou MTB si jaune)','8×1 min rapide / 1 min récup + échauff 15 min · ou MTB technique 1h–1h30 si charge élevée','09:00',{scalable:true,vol:7,unit:'km'}),
+      S('golf','Petit jeu & putting','Wedges 30–100 m · chipping · bunker · putting 20 min · coût physique nul','16:00',{skipOnRed:false,vol:60,unit:'min'}),
+    ]},
+    {load:5,sessions:[
+      S('golf','Practice — 45 min max','Range avec intention : 1 seul point technique · jamais 18 trous le jeudi','09:00',{vol:45,unit:'min'}),
+      S('renfo','Renfo C — Gainage 30 min UNIQUEMENT','Planche 3×45s · side plank 3×35s · dead bug 3×10 · oiseau-chien 3×12 · hollow 3×30s · rien de plus','13:00',{scalable:true,vol:30,unit:'min'}),
+      S('nutri','PBJ pré-enduro','Pain complet · beurre de cacahuète · confiture — 430 kcal · 1h30 avant le départ','17:00',{skipOnRed:false}),
+      S('mtb','Enduro soir — sacré','Sortie hebdo fixe juin–oct · social + performance · coucher 23h30 max','18:30'),
+    ]},
+    {load:3,sessions:[
+      S('mob','Foam roller 20 min — obligatoire','Quadri · IT band · fessiers · mollets · dorsaux — avant toute séance après l\'enduro','09:00',{skipOnRed:false}),
+      S('renfo','Renfo D — Pull & core','Pull-ups · australian rows · russian twist · landmine rainbow · ab wheel · farmer\'s carry','09:30',{scalable:true,vol:60,unit:'min'}),
+      S('nutri','Préparer le sac de la longue','Flasks · gels comptés · météo · parcours choisi · coucher 22h30','21:00',{skipOnRed:false}),
+    ]},
+    {load:4,sessions:[
+      S('run','Run 3/3 · LA LONGUE','Allure EF conservatrice · bâtons si >800 m D+ · 1 gel / 40 min · boire toutes les 15–20 min','08:00',{scalable:true,vol:20,unit:'km'}),
+      S('mob','Mobilité post-longue','Mollets · hanches · fessiers · 20 min · repas dans l\'heure','—',{skipOnRed:false}),
+    ]},
+    {load:2,sessions:[
+      S('golf','Parcours 2/2 — 18 trous marchés (option A)','Récup active après la longue · moins traumatisant que l\'enduro · premier coupé si Whoop décroche','09:00',{vol:18,unit:'trous'}),
+      S('mtb','MTB plaisir (option B)','Sortie sociale, pas de performance','10:00'),
+      S('rest','Repos total (option C)','Si Whoop <40 % ou semaine très chargée — choix valide','—',{skipOnRed:false}),
+    ]},
+  ],
+  hiver: [
+    {load:3,sessions:[
+      S('whoop','Whoop check','Si <33 % → renfo annulé, journée mobilité','06:30',{skipOnRed:false}),
+      S('renfo','Renfo A — Jambes SB','Jump squat · lateral bounds · fentes bulgares · glute bridge uni · single-leg RDL · balance · wall sit','09:30',{scalable:true,vol:70,unit:'min'}),
+      S('sb','Session snowboard','Enseignement ou perso selon planning école','13:00'),
+    ]},
+    {load:4,sessions:[
+      S('sb','SB matin','3–4h · technique ou enseignement','09:00'),
+      S('renfo','Renfo B — Core & rotation SB','Russian twist · T-rotation · dead bug · oiseau-chien · hollow · landmine rainbow · wood chop','15:00',{scalable:true,vol:55,unit:'min'}),
+    ]},
+    {load:2,sessions:[
+      S('sb','SB léger ou repos actif','Sortie plaisir · pas d\'enseignement · 2–3h max','09:00'),
+      S('mob','Mobilité 30 min','Post-SB : hanches · cheville · épaules · foam roller','16:00',{skipOnRed:false}),
+    ]},
+    {load:3,sessions:[
+      S('renfo','Renfo C — Haut du corps SB','Push-ups · pull-ups · face pull · rotation externe · dead hang · pike push-ups','09:30',{scalable:true,vol:60,unit:'min'}),
+      S('sb','Session SB après-midi','Enseignement ou perso','13:00'),
+    ]},
+    {load:5,sessions:[
+      S('sb','SB full day','Enseignement + perso · 5–6h de snow','08:30'),
+      S('renfo','Renfo D — Full body explosif','Burpees · tuck jumps · clap push-ups · pull-ups explosifs · KB snatch · clean&press','17:30',{scalable:true,vol:50,unit:'min'}),
+    ]},
+    {load:4,sessions:[
+      S('sb','SB enseignement full day','6–8h · peak strain de la semaine · déjeuner 50 g protéines','08:00'),
+      S('nutri','Coucher 22h max','Récup dimanche impérative','22:00',{skipOnRed:false}),
+    ]},
+    {load:1,sessions:[
+      S('rest','Réveil naturel · repos','Pas de strain planifié','—',{skipOnRed:false}),
+      S('sb','SB plaisir (optionnel)','2h max · ludique · si Whoop <40 % → repos total','10:00'),
+      S('mob','Mobilité 30 min + pressothérapie','Récupération active','14:00',{skipOnRed:false}),
+    ]},
+  ],
+  transition: [
+    {load:1,sessions:[S('mob','Mobilité 15–30 min + bilan','Routine réveil + soir · noter ce qui a marché / bloqué','—',{skipOnRed:false})]},
+    {load:2,sessions:[S('renfo','Renfo léger (optionnel)','Haut du corps · pas de jambes lourdes','—',{scalable:true,vol:30,unit:'min'})]},
+    {load:1,sessions:[S('run','Footing léger','Marche/course · zéro intensité','—',{scalable:true,vol:35,unit:'min'})]},
+    {load:1,sessions:[S('rest','Repos ou marche','—','—',{skipOnRed:false})]},
+    {load:1,sessions:[S('mob','Mobilité + pressothérapie','—','—',{skipOnRed:false})]},
+    {load:2,sessions:[S('mob','Sortie nature 1h','Marche · rando légère · plaisir','10:00',{skipOnRed:false}),S('renfo','Renfo léger optionnel','Haut du corps uniquement','14:00',{scalable:true,vol:30,unit:'min'})]},
+    {load:1,sessions:[S('rest','Repos complet','Bilan de la semaine','—',{skipOnRed:false})]},
+  ]
+};
+
+/* Habitudes — reprend le template Notion + les 3 lignes sport manquantes */
+const DEFAULT_HABITS = [
+  {id:'h_sleep',grp:'💤 Nuit',lb:'7h30 de sommeil / 8h au lit (23h → 07h)'},
+  {id:'h_whoop',grp:'☀️ Matin',lb:'Whoop consulté AVANT de décider la séance',sport:true},
+  {id:'h_stretch',grp:'☀️ Matin',lb:'Étirements pieds + corps'},
+  {id:'h_teeth1',grp:'☀️ Matin',lb:'Brossage de dents'},
+  {id:'h_supp',grp:'☀️ Matin',lb:'Compléments (KXNGS + Collagène)'},
+  {id:'h_life',grp:'☀️ Matin',lb:'Lire LIFE GUIDELINE'},
+  {id:'h_mail',grp:'💼 Pro',lb:'Check Mail'},
+  {id:'h_agent',grp:'💼 Pro',lb:'Recap Agent IA — récap 10h Telegram'},
+  {id:'h_session',grp:'🏋️ Sport',lb:'Séance(s) du jour faites ou reportées consciemment',sport:true},
+  {id:'h_mag',grp:'🌙 Soir',lb:'Magnésium bisglycinate 300–400 mg',sport:true},
+  {id:'h_face',grp:'🌙 Soir',lb:'Nettoyage visage + crème'},
+  {id:'h_teeth2',grp:'🌙 Soir',lb:'Brossage de dents'},
+  {id:'h_plan',grp:'📅 Bilan',lb:'Planification du lendemain faite'},
+];
+
+const DEFAULT_GOALS = [
+  {id:'g1',ic:'🏃',title:'Base trail 2027 — volume',sport:'Trail',metric:'km/sem en pic',target:45,current:38,deadline:'2026-10-31',status:'active',notes:'3 runs/sem mai→oct, longue max 22–25 km / 1200 m D+. Ce volume conditionne la qualité du plan 55 km 2027.'},
+  {id:'g2',ic:'🏔️',title:'WildStrubel 55 km',sport:'Trail',metric:'course',target:1,current:0,deadline:'2027-09-12',status:'active',notes:'Plan dédié à construire en déc 2026 / jan 2027 sur la base 2026.'},
+  {id:'g3',ic:'⛳',title:'Descendre l\'index golf',sport:'Golf',metric:'index',target:12,current:18,deadline:'2026-10-31',status:'active',notes:'Levier n°1 : petit jeu et putting (mercredi), pas plus de parcours. Noter fairways / GIR / putts sur 5 parcours.'},
+  {id:'g4',ic:'💪',title:'Renfo 4 séances/sem tenues',sport:'Renfo',metric:'sem consécutives',target:12,current:0,deadline:'2026-12-31',status:'active',notes:'Point faible Whoop (+0.7–1.5 an WHOOP Age). Levier le plus rentable du plan.'},
+  {id:'g5',ic:'📊',title:'WHOOP Age ≤ 22 toute l\'année',sport:'Récup',metric:'ans',target:22,current:20,deadline:'2027-04-30',status:'active',notes:'Été 19–20, hiver 24–25 historiquement. L\'hiver est le vrai test.'},
+  {id:'g6',ic:'😴',title:'8h de sommeil, 5 nuits/7',sport:'Récup',metric:'nuits/sem',target:5,current:3,deadline:'2026-12-31',status:'active',notes:'Nuits 6h–6h30 fréquentes. Coucher 22h30–23h.'},
+];
+
+/* Rattrapage — 14 combos */
+const RATTRAPAGE = {
+'lun-ete':{v:'warn',tag:'Décaler mardi',t:'Lundi été — Run EF + Renfo A',s:['Ce soir : 20 min de mobilité, pas de sport.','Demain matin, Whoop : >50 % → Renfo A mardi avant 9h. <50 % → mercredi.','Le run EF ne se rattrape pas — les deux autres runs portent la progression.','Renfo A version 45 min : Nordic curl 3×6 · fentes bulgares 4×10 · step-up 3×12.','Si Renfo A prend le mardi, Renfo B glisse mercredi matin et remplace le fractionné.']},
+'lun-hiver':{v:'warn',tag:'Décaler mardi',t:'Lundi hiver — Renfo A Jambes SB',s:['Ce soir : mobilité 20 min + foam roller.','Mardi matin si Whoop >50 % : Renfo A avant la session SB.','Version courte : jump squat 4×8 · lateral bounds 3×10 · fentes bulgares 4×10 · balance 3×45s.','Sinon : intégrer jump squats + lateral bounds à l\'échauffement SB de mardi.']},
+'mar-ete':{v:'warn',tag:'Renfo B → mercredi',t:'Mardi été — Parcours 18T + Renfo B',s:['Le parcours est perdu — un créneau, pas une séance.','Renfo B glisse mercredi matin, avant le run ou MTB.','Version courte : landmine rainbow 3×10 · pull-ups 4×max · TRX rows 3×12 · face pull 2×15.','Ne pas décaler au jeudi — gainage léger obligatoire avant l\'enduro.']},
+'mar-hiver':{v:'warn',tag:'Renfo B → mercredi',t:'Mardi hiver — SB + Renfo B Core',s:['La session SB ne se rattrape pas.','Renfo B mercredi matin (journée légère hiver).','Landmine rainbow · wood chop · dead bug · hollow body — 45 min.']},
+'mer-ete':{v:'skip',tag:'Ne pas rattraper',t:'Mercredi été — Run 2 + petit jeu',s:['Le run 2 ne se rattrape pas : aucun créneau de repli sans dégrader autre chose.','Pas le jeudi (enduro le soir), pas le vendredi (veille de longue).','Marche rapide 30 min si l\'horaire le permet. Rien de plus.','Le petit jeu golf se rattrape n\'importe quel jour — coût nul.','La semaine continue normalement.']},
+'mer-hiver':{v:'skip',tag:'Mobilité seulement',t:'Mercredi hiver — SB léger + mobilité',s:['Déjà la journée la plus légère. La louper = repos bonus.','20 min de mobilité à l\'arrivée si possible.','Rien à réorganiser.']},
+'jeu-ete':{v:'stop',tag:'Enduro perdu',t:'Jeudi été — Practice + gainage + enduro',s:['L\'enduro est irrattrapable — sortie collective à date fixe.','Le gainage se reporte vendredi en fin de Renfo D (20 min).','Faisable partout : planche 3×45s · side plank 3×35s · dead bug 3×10 · hollow 3×30s.','Le practice se rattrape n\'importe quand.','Bénéfice indirect : Recovery meilleure vendredi, longue meilleure samedi.']},
+'jeu-hiver':{v:'warn',tag:'Reportable le soir',t:'Jeudi hiver — Renfo C haut du corps',s:['La session SB ne se rattrape pas.','Renfo C sans matériel : pompes 4×15 · pike push-ups 4×12 · rows sur table 4×12 · dead hang 3×30s.','Sinon : version raccourcie vendredi matin.','Garder les face pull / rotations externes même en version dégradée.']},
+'ven-ete':{v:'warn',tag:'Samedi matin',t:'Vendredi été — Foam roller + Renfo D',s:['Option A : samedi matin très tôt, 40 min haut du corps, puis départ longue.','Option B : après la longue, haut du corps uniquement, jambes refroidies.','Le foam roller reste non négociable — 20 min vendredi soir quoi qu\'il arrive.','Ne jamais faire Renfo D complet ET longue le même jour.']},
+'ven-hiver':{v:'warn',tag:'Samedi matin',t:'Vendredi hiver — SB + Renfo D explosif',s:['La session SB : le samedi full day compense.','Renfo D court samedi matin : burpees 3×8 · tuck jumps 3×8 · clap push-ups 3×8 · pull-ups explosifs 3×max.','Sinon : gainage 20 min vendredi soir.']},
+'sam-ete':{v:'warn',tag:'Repositionner dimanche',t:'Samedi été — LA LONGUE',s:['Séance la plus importante de la semaine trail. Se repositionne, ne se supprime pas.','Dimanche : annuler le golf/MTB, faire la longue à la place. Même distance, même D+.','Version 70 % acceptable si créneau court : prévu 22 km → 15–16 km, même D+.','Si dimanche aussi pris : lundi, et la semaine suivante démarre avec un jour de retard.','Préparer le sac dès samedi soir.']},
+'sam-hiver':{v:'stop',tag:'Irrattrapable',t:'Samedi hiver — SB enseignement',s:['Prévenir l\'école dès que possible.','Une journée de snow en moins n\'a aucune conséquence physique.','Ne pas surcharger le dimanche pour compenser.','Tous les renfos de la semaine sont déjà faits — rien de perdu côté force.']},
+'dim-ete':{v:'skip',tag:'Aucune action',t:'Dimanche été — Golf / MTB / repos',s:['Le meilleur jour pour louper quelque chose.','Repos supplémentaire = Recovery meilleure lundi.','Rien à réorganiser.']},
+'dim-hiver':{v:'skip',tag:'Aucune action',t:'Dimanche hiver — Repos',s:['Déjà un jour de repos.','Rien à louper.']}
+};
+const RAT_REASON = {
+ route:{lb:'🚗 Trajet',cls:'warn',t:'<b>Après un long trajet :</b> 20 min de mobilité + foam roller à l\'arrivée avant toute décision. Évaluer l\'état réel avant de planifier un rattrapage.'},
+ travail:{lb:'💼 Charge travail',cls:'',t:'<b>Charge pro :</b> le stress cognitif pèse sur la Recovery autant qu\'une séance. Si ça dure, réduire à 2 runs/sem plutôt que louper irrégulièrement.'},
+ fatigue:{lb:'😴 Fatigue',cls:'red',t:'<b>Fatigue → le Whoop tranche.</b> Sous 40 %, mobilité uniquement. Les étapes ne s\'appliquent qu\'au-dessus de 50 %.'},
+ maladie:{lb:'🤒 Maladie',cls:'red',t:'<b>Maladie → aucun rattrapage.</b> Pas de sport avec fièvre. Reprendre 48h après disparition des symptômes, volume réduit.'},
+ meteo:{lb:'⛈️ Météo',cls:'ok',t:'<b>Météo :</b> si la forme est bonne (>60 %), tout le travail intérieur reste possible — renfo, gainage, mobilité.'}
+};
+</script>
+<script>
+/* ═══════════════════════════════════════════════
+   GUIDE — contenu de référence (Master Plan + Terrain)
+   ═══════════════════════════════════════════════ */
+const kv = (k,v,c='') => `<div class="kv"><span class="k">${k}</span><span class="v ${c}">${v}</span></div>`;
+const ex = (n,w,s) => `<div class="ex"><div class="n"><b>${n}</b><span>${w}</span></div><div class="s">${s}</div></div>`;
+const grp = t => `<div class="ex-grp">${t}</div>`;
+const note = (t,c='') => `<div class="note ${c}">${t}</div>`;
+const acc = (ic,t,body,open=false) => `<div class="acc ${open?'open':''}"><div class="acc-h" onclick="this.parentElement.classList.toggle('open')"><span class="ic">${ic}</span><h4>${t}</h4><span class="arr"></span></div><div class="acc-b">${body}</div></div>`;
+
+const RENFO = {
+ ete:{
+  A:{t:'Lundi — Jambes MTB / Trail',sub:'Excentrique · chaîne postérieure · unilatéral · 65 min',
+   cali:grp('⭐ Priorité')+ex('Nordic curl (assisté)','Descente 4–5 s, remontée aux mains. LE plus protecteur pour les descentes.','4 × 5')+grp('🦵 Excentrique')+ex('Squat excentrique 5 s','Descente comptée, remontée normale.','4 × 8')+ex('Fente bulgare','Corrige l\'asymétrie SB.','4 × 10 /c')+ex('Single-leg RDL','Équilibre + ischios.','3 × 10 /c')+grp('🍑 Chaîne postérieure')+ex('Hip thrust PdC','Pause 2 s en haut.','4 × 15')+ex('Step-up 50 cm','Montée explosive, descente contrôlée.','3 × 12 /c')+grp('⚖️ Proprioception')+ex('Équilibre unipodal yeux fermés','Surface instable si possible.','3 × 45s /c'),
+   gym:grp('⭐ Priorité')+ex('Nordic curl machine','Descente 4–5 s.','4 × 6')+grp('🦵 Force')+ex('Back squat excentrique 5 s','70–75 % 1RM. Tempo > charge.','4 × 6')+ex('Fente bulgare haltères','Progression hebdo.','4 × 10 /c')+ex('Romanian deadlift','Dos neutre.','4 × 8')+grp('🍑')+ex('Hip thrust barre','Pause 2 s.','4 × 10')+ex('Leg curl excentrique','Montée 2 j., descente 1 j. 4 s.','3 × 8 /c')+grp('⚖️')+ex('Balance board / Bosu','Mini-squats.','3 × 45s /c')},
+  B:{t:'Mardi — Golf & haut du corps MTB',sub:'Rotation · dos · grip · 55 min',
+   cali:grp('🌀 Rotation golf')+ex('Wood chop élastique','Rotation par les hanches.','4 × 12 /c')+ex('Rotation russe lestée','Pieds décollés, contrôle.','3 × 20')+ex('Pallof press','Anti-rotation.','3 × 12 /c')+grp('🎯 Dos')+ex('Pull-ups prise large','Descente 3 s.','4 × max')+ex('Australian rows','Pause poitrine à la barre.','4 × 12')+ex('Face pull élastique','Santé d\'épaule.','3 × 15')+grp('✊ Grip')+ex('Dead hang','Viser 60 s.','3 × max'),
+   gym:grp('🌀 Rotation golf')+ex('Landmine rainbow','LE mouvement rotation golf.','4 × 10 /c')+ex('Cable wood chop','Charge modérée.','4 × 12 /c')+ex('Pallof press poulie','Bras tendus.','3 × 12 /c')+grp('🎯 Dos')+ex('Weighted pull-ups','Progression charge.','4 × 6')+ex('Rowing barre','Vers le nombril.','4 × 10')+ex('Face pull poulie','3 séries systématiques.','3 × 15')+grp('✊ Grip')+ex('Farmer\'s carry lourd','30–40 m.','4 × 40 m')},
+  C:{t:'Jeudi — Gainage 30 min UNIQUEMENT',sub:'Enduro le soir · rien de plus',
+   cali:note('<strong>Ne rien ajouter.</strong> Si tu te sens frais et que tu veux en faire plus — la réponse est non.','red')+ex('Planche','Rétroversion, fessiers serrés.','3 × 45s')+ex('Side plank','Hanche haute.','3 × 35s /c')+ex('Dead bug','Lombaires plaquées.','3 × 10 /c')+ex('Bird dog','Pause 2 s.','3 × 12 /c')+ex('Hollow body','Réduire l\'amplitude si lombaires décollent.','3 × 30s')+note('Whoop <40 % → annuler le gainage. <33 % → annuler l\'enduro aussi.','ok'),
+   gym:null},
+  D:{t:'Vendredi — Récup enduro + Pull & core',sub:'Foam roller 20 min AVANT · 60 min',
+   cali:note('<strong>Foam roller 20 min obligatoire :</strong> quadri · IT band · fessiers · mollets · dorsaux — 2 min/zone/côté.','warn')+grp('🎯 Tirage')+ex('Pull-ups','Descente 3 s.','5 × max')+ex('Chin-ups','Supination.','3 × max')+ex('Australian rows pieds surélevés','Corps gainé.','4 × 12')+grp('🧱 Core')+ex('Ab wheel','Lombaires ne creusent jamais.','3 × 10')+ex('Rotation russe','Obliques.','3 × 20')+ex('Planche dynamique','Bras tendus ↔ coudes.','3 × 12'),
+   gym:note('<strong>Foam roller 20 min obligatoire</strong> avant.','warn')+grp('🎯 Tirage')+ex('Weighted pull-ups','','4 × 6')+ex('Tirage horizontal poulie','','4 × 12')+ex('Lat pulldown','','3 × 12')+grp('🧱 Core')+ex('Ab wheel','','3 × 10')+ex('Cable rotation','','3 × 15 /c')+ex('Farmer\'s carry','','3 × 40 m')}
+ },
+ hiver:{
+  A:{t:'Lundi — Jambes Snowboard',sub:'Explosivité · stabilité genou · cheville · 70 min',
+   cali:grp('⚡ Explosivité')+ex('Jump squat','Atterrissage silencieux = qualité.','4 × 8')+ex('Lateral bounds','Amplitude max, stabiliser 1 s.','4 × 10 /c')+ex('Tuck jumps','Genoux poitrine.','3 × 10')+grp('🦵 Force')+ex('Fente bulgare','','4 × 10 /c')+ex('Glute bridge unilatéral','Pause 2 s.','3 × 12 /c')+ex('Single-leg RDL','','3 × 10 /c')+ex('Wall sit','Isométrie carving.','3 × 60s')+grp('⚖️')+ex('Équilibre yeux fermés','','3 × 45s /c'),
+   gym:grp('⚡ Explosivité')+ex('Box jump 60 cm','Descendre en marchant.','5 × 5')+ex('Trap bar jump','30 % 1RM, vitesse max.','4 × 5')+ex('Lateral bounds lestés','','4 × 8 /c')+grp('🦵 Force')+ex('Back squat','80–85 % — fenêtre force hiver.','5 × 5')+ex('Fente bulgare haltères','','4 × 10 /c')+ex('Hip thrust barre','','4 × 10')+ex('Leg extension iso','Tenue 5 s.','3 × 10')+grp('⚖️')+ex('Balance board','','3 × 45s')},
+  B:{t:'Mardi — Gainage & rotation SB',sub:'Rotation thoracique · anti-rotation · 55 min',
+   cali:grp('🌀 Rotation')+ex('Rotation russe lestée','','4 × 20')+ex('Planche rotation en T','Ouverture complète.','3 × 10 /c')+ex('Wood chop élastique','','3 × 12 /c')+grp('🧱 Gainage')+ex('Dead bug','','4 × 12 /c')+ex('Bird dog','','3 × 12 /c')+ex('Hollow body','','4 × 35s')+ex('L-sit','Genoux pliés → tendus.','3 × 20s'),
+   gym:grp('🌀 Rotation')+ex('Landmine rainbow','','4 × 10 /c')+ex('Cable wood chop','Haut→bas puis bas→haut.','4 × 12 /c')+ex('Pallof press','','3 × 12 /c')+grp('🧱')+ex('Ab wheel','','4 × 10')+ex('Hanging leg raise','','3 × 12')+ex('Planche lestée','','3 × 45s')},
+  C:{t:'Jeudi — Haut du corps & épaules',sub:'Push/pull · coiffe rotateurs · 60 min',
+   cali:grp('💪 Push')+ex('Pompes larges','','4 × 15')+ex('Pike push-ups','','4 × 12')+ex('Dips','','3 × 10')+grp('🎯 Pull')+ex('Pull-ups','','4 × max')+ex('Australian rows','','4 × 12')+grp('🛡️ Coiffe — protection chute')+ex('Face pull élastique','Prévention, pas performance.','3 × 20')+ex('Rotation externe élastique','Coude collé, charge très légère.','3 × 15 /c')+ex('Dead hang','','3 × 45s'),
+   gym:grp('💪 Push')+ex('Développé militaire','','4 × 8')+ex('Développé couché haltères','','4 × 10')+ex('Dips lestés','','3 × 8')+grp('🎯 Pull')+ex('Weighted pull-ups','','4 × 6')+ex('Rowing barre','','4 × 10')+grp('🛡️')+ex('Face pull poulie','','3 × 20')+ex('Rotation externe poulie','','3 × 15 /c')},
+  D:{t:'Vendredi — Full body explosif',sub:'Puissance · conditionnement · 50 min',
+   cali:grp('⚡ Circuit — 4 tours, repos 90 s')+ex('Burpees','','10')+ex('Tuck jumps','','8')+ex('Clap push-ups','Régresser si besoin.','6')+ex('Pull-ups explosifs','','5')+ex('Mountain climbers','','30s')+note('Whoop <50 % : 3 tours, couper les clap push-ups.'),
+   gym:grp('⚡ Puissance')+ex('KB snatch','Technique avant charge.','4 × 6 /c')+ex('DB clean & press','','4 × 8')+ex('KB swing','','4 × 15')+ex('Landmine rainbow','','3 × 10 /c')+ex('Box jump','','4 × 6')}
+ }
+};
+
+function renderRenfo(season, opt){
+  const R = RENFO[season];
+  let h = `<div class="subtabs" style="margin-bottom:8px"><span class="subtab ${season==='ete'?'active':''}" onclick="renderRenfoInto('ete','${opt}')">☀️ Été</span><span class="subtab ${season==='hiver'?'active':''}" onclick="renderRenfoInto('hiver','${opt}')">❄️ Hiver</span><span style="flex:1"></span><span class="subtab ${opt==='cali'?'active':''}" onclick="renderRenfoInto('${season}','cali')">🌿 Calisthenics</span><span class="subtab ${opt==='gym'?'active':''}" onclick="renderRenfoInto('${season}','gym')">🏋️ Salle</span></div>`;
+  for(const k of ['A','B','C','D']){
+    const s = R[k]; const body = (s[opt] ?? s.cali);
+    h += acc(`<b style="font-family:'Barlow Condensed';color:var(--text3);font-size:20px">${k}</b>`, `${s.t}<div style="font-size:11px;color:var(--text3);font-weight:400;margin-top:1px">${s.sub}</div>`, body);
+  }
+  return h;
+}
+function renderRenfoInto(season,opt){ document.getElementById('renfo-host').innerHTML = renderRenfo(season,opt); }
+
+const GUIDE_SECTIONS = [
+ {id:'plan',ic:'📅',t:'Plan annuel',b:()=>
+  note('<strong>Structure :</strong> Hiver SB (nov–avr) → Transition (avr) → Été multi-sports + base trail (mai–oct) → Transition (oct). Trail : 3 runs/sem de mai à octobre, sans phase de pic.')+
+  acc('❄️','Janvier – Mars · Hiver SB',kv('Sport','Snowboard — enseignement + perso')+kv('Trail','Arrêté')+kv('Renfo','Version hiver 4j/sem')+kv('Golf','Simulateur si dispo')+kv('⚠️ Whoop','Rouges nov–déc fréquents','r'))+
+  acc('🔄','Avril · Transition',kv('Sem 1–2','Bilan · mobilité · volume −40 %')+kv('Sem 3–4','Reprise trail : 2 footings 30 min → 1 EF 45 min')+kv('Renfo','Transition vers été, 2 séances légères'))+
+  acc('☀️','Mai – Juin',kv('Trail mai','3 runs · 25–30 km · longue 12–16 km / 400–600 D+')+kv('Trail juin','3 runs · 35–40 km · longue 18–22 km / 800–1000 D+')+kv('Enduro','Jeudi soir dès juin — sacré')+kv('Golf','4× /sem : 2 parcours + petit jeu + practice','g'))+
+  acc('🔥','Juillet – Août',kv('Trail juil','40–45 km · longue 22–25 km / 1000–1200 D+ · course test mi-juillet')+kv('Trail août','38–42 km stable · pas de B2B')+kv('⚠️ Cumul','3 rouges consécutifs → couper 1 trail + 1 renfo','y')+kv('Société','Si pic de travail → 2 runs/sem temporairement'))+
+  acc('🍂','Septembre – Octobre',kv('Trail sept','35–40 km · maintien sans pression')+kv('Octobre','Transition · 2 runs max · volume −40 %')+kv('Bilan','Révision du plan trail pour 2027'))+
+  acc('🎿','Novembre – Décembre',kv('Sport','Retour SB · volume progressif')+kv('Renfo','Transition vers version hiver')+kv('⚠️ Déc','Fêtes + cours = pic fatigue','r')+kv('Plan 2027','Construire le plan 55 km en décembre','g'))
+ },
+ {id:'trail',ic:'🏃',t:'Base Trail 2027',b:()=>
+  note('<strong>Pas de course en 2026.</strong> L\'été construit la base pour un 55 km en 2027 : 3 runs/sem, progression douce, longue max 22–25 km, sans pic ni taper.','ok')+
+  `<table class="tbl"><tr><th>Période</th><th>Vol/sem</th><th>Longue</th><th>D+</th></tr>
+  <tr><td class="m">Avr</td><td>10–15</td><td>8–10</td><td>300</td></tr><tr><td class="m">Mai</td><td>25–30</td><td>12–14</td><td>400–600</td></tr><tr><td class="m">Juin</td><td>30–37</td><td>16–20</td><td>600–1000</td></tr><tr><td class="m">Juil</td><td>38–45</td><td>20–25</td><td>1000–1200</td></tr><tr><td class="m">Août</td><td>38–42</td><td>22–25</td><td>1000–1200</td></tr><tr><td class="m">Sept</td><td>32–38</td><td>18–22</td><td>800–1000</td></tr><tr><td class="m">Oct</td><td>15–20</td><td>10–12</td><td>300–500</td></tr></table>`+
+  acc('🏃','Run 1 — EF lundi',kv('Distance','7–10 km')+kv('Allure','Conversationnelle · zone 2')+kv('But','Activer sans fatiguer'))+
+  acc('⚡','Run 2 — Qualité mercredi',kv('Whoop vert','Fractionné : 8×1 min → 5×5 min montée')+kv('Whoop jaune','MTB technique à la place')+kv('Progression','Mai 8×1 · Juin 6×2 · Juil 5×3 montée · Août 4×5 · Sept tempo 30–40 min'))+
+  acc('🏔️','Run 3 — Longue samedi',kv('Distance','12 km (mai) → 22–25 km (juil–août)')+kv('D+','400 → 1000–1200 m')+kv('Bâtons','Dès >800 m · obligatoires >1200 m')+kv('Nutrition','1 gel/40 min si >1h30')+kv('Règle','Ne se sacrifie jamais sauf Whoop rouge','r'))+
+  acc('🎯','Ce que 2027 exigera en plus',kv('Volume pic','55–58 km (B2B)')+kv('Longue max','28–32 km / 1600 D+')+kv('Nutrition race','Gérer 8–10h de gels')+kv('Mental','Passer la zone 35–45 km'))
+ },
+ {id:'golf',ic:'⛳',t:'Golf — 4 séances',b:()=>
+  note('<strong>À index 15–30, les coups se perdent à moins de 100 m et sur le green.</strong> Une heure de petit jeu fait baisser l\'index plus vite qu\'une heure de parcours en plus.','golf')+
+  `<table class="tbl"><tr><th>Jour</th><th>Format</th><th>Charge</th></tr>
+  <tr><td class="m">Mar</td><td>18 trous marchés</td><td class="y">Modéré · 10–12 km</td></tr><tr><td class="m">Mer</td><td>Petit jeu & putting 60–75 min</td><td class="g">Nul</td></tr><tr><td class="m">Jeu</td><td>Practice 45 min max</td><td class="g">Très faible</td></tr><tr><td class="m">Dim</td><td>18 trous marchés</td><td class="y">Modéré</td></tr></table>`+
+  acc('🎯','Faire baisser l\'index',grp('Priorité 1 · Putting — 20 min')+ex('Cercle 8 balles à 1 m','Rentrer les 8 d\'affilée.','')+ex('Longue distance','Dosage : cercle 1 m autour du trou.','')+grp('Priorité 2 · Wedges 30–100 m — 25 min')+ex('10 balles à 50, 70, 90 m','Noter la dispersion. 3 longueurs de swing.','')+grp('Priorité 3 · Chipping & bunker — 20 min')+ex('15 sorties de bunker d\'affilée','Jusqu\'à routine.','')+note('<strong>Noter sur la carte :</strong> fairways touchés /14 · greens en régulation /18 · putts. Sur 5 parcours le point faible devient évident.'))+
+  acc('🚫','Règles de conflit',kv('Jeudi','Practice 45 min max · jamais 18T','r')+kv('Vendredi','Putting seulement · veille de longue','r')+kv('Si Whoop décroche','1er coupé : parcours dimanche → practice jeudi → mardi en 9T')+kv('Jamais coupé','Petit jeu mercredi — coût nul','g')+kv('Vigilance','+20–24 km marche/sem · 2 lundis rouges → dimanche saute','y'))
+ },
+ {id:'renfo',ic:'💪',t:'Renfo 4j — séances détaillées',b:()=>`<div id="renfo-host">${renderRenfo('ete','cali')}</div>`+
+  acc('📋','Principes',kv('Progression cali','Reps → temps sous tension → variante plus dure')+kv('Progression salle','+2,5 kg quand tout passe 2 séances de suite')+kv('Jamais','Charge et volume la même semaine')+kv('Toutes les 4 sem','1 semaine à −30 %')+kv('Whoop 🟡','−30 % volume, pas d\'explosif','y')+kv('Whoop 🔴','Annulé · mobilité','r'))
+ },
+ {id:'mob',ic:'🧘',t:'Mobilité',b:()=>
+  note('15 min régulièrement > 1h une fois par mois. Chaque routine a son moment fixe.')+
+  acc('☀️','Réveil · 10 min',ex('Cat-cow','15 lents','')+ex('Cercles hanches','10/sens','')+ex('Ouverture thoracique','10/côté','')+ex('Cercles chevilles','20/pied','')+ex('Fentes marchées','10/jambe',''))+
+  acc('🏃','Post-trail · 15 min',ex('Mollets au mur','60s/j, tendu puis fléchi','')+ex('Ischios','60s/j','')+ex('Pigeon','90s/côté','')+ex('Quadri debout','45s/j','')+ex('Fascia plantaire','balle 60s/pied',''))+
+  acc('🚵','Post-enduro · 20 min',ex('Foam roller quadri','2 min/j','')+ex('Foam roller IT band','2 min/c','')+ex('Pectoraux au mur','60s/c','')+ex('Extension thoracique','roller 2 min','')+ex('Avant-bras','45s/c',''))+
+  acc('❄️','Post-SB · 15 min',ex('Fléchisseurs hanche','90s/c','')+ex('Cheville genou au mur','20/pied','')+ex('Rotation thoracique','12/c','')+ex('Lombaires','genoux poitrine 90s','')+ex('Décompression épaules','suspension 30s ×2',''))+
+  acc('⛳','Avant golf · 8 min',ex('Rotations thoraciques','15/c, bassin fixe','')+ex('Cercles bras','20/sens','')+ex('Rotation hanche','12/c','')+ex('Swings à vide','15 progressifs',''))+
+  acc('🦵','Dimanche · 30 min',ex('Foam roller complet','12 min','')+ex('Étirements longs','12 min, 90s/position','')+ex('TRX assisté','6 min','')+ex('Pressothérapie','30 min si dispo',''))+
+  note('<strong>Le plus rentable :</strong> foam roller vendredi matin avant Renfo D. À ne jamais sauter.','warn')
+ },
+ {id:'nutri',ic:'🍽️',t:'Nutrition',b:()=>
+  acc('🍳','Jour entraînement · 3590 kcal / 227 g P',kv('07:30 Petit-déj FIXE','860 kcal / P51 — intouchable')+kv('10:30 Boost','Yaourt grec · banane · miel · chia — 310')+kv('13:00 Déjeuner','Poulet · riz · légumes · parmesan — 700 / P48')+kv('16:00 PBJ','Pain complet · beurre cacahuète · confiture — 430')+kv('18:30 Shake','Whey · lait avoine · banane — 360 / P30')+kv('20:00 Dîner','Bœuf/poulet · patate douce · salade — 660')+kv('22:00 Nuit','Fromage blanc · noix · magnésium — 270'),true)+
+  acc('🛌','Jour repos · ~2850 kcal / 180 g P',kv('Principe','Protéines maintenues, glucides réduits')+kv('Supprimer','PBJ et shake post-séance'))+
+  acc('💊','Suppléments',kv('Matin à jeun','KXNGS + Granions collagène I/II')+kv('Post-séance','Whey 30 g')+kv('Soir','Magnésium bisglycinate 300–400 mg')+kv('Hiver','D3 + K2')+kv('Optionnel','Créatine 3–5 g'))+
+  acc('🏔️','En sortie longue',`<table class="tbl"><tr><th>Durée</th><th>Eau/h</th><th>Glucides/h</th><th>Sel</th></tr><tr><td class="m">&lt;45 min</td><td>—</td><td>—</td><td>—</td></tr><tr><td class="m">45–90</td><td>400–500</td><td>0–30 g</td><td>si &gt;20°</td></tr><tr><td class="m">1h30–2h30</td><td>500</td><td>30–45 g</td><td>si &gt;15°</td></tr><tr><td class="m">2h30–4h</td><td>500–600</td><td>45–60 g</td><td>/90 min</td></tr><tr><td class="m">&gt;4h</td><td>600</td><td>60 g</td><td>/90 min</td></tr></table>`+note('Ne jamais attendre la soif. Gels toujours avec de l\'eau.','warn'))
+ },
+ {id:'sleep',ic:'😴',t:'Sommeil',b:()=>
+  kv('Réveil','06:30 – 07:00')+kv('Coucher','22:30 – 23:00')+kv('Minimum','8h')+kv('Exception jeudi','Coucher 23h30 max → vendredi 07:30')+kv('Veille de longue','Coucher 22h30 vendredi — obligatoire','r')+
+  note('<strong>Pattern crash :</strong> 2 nuits &lt;6h30 consécutives → baisser le Strain dès le 2e matin. Ne pas attendre le rouge.','warn')+
+  note('Écrans off 30 min avant. Magnésium 22h. Chambre 18°C. Réveil sans alarme le dimanche.')
+ },
+ {id:'gear',ic:'🎒',t:'Équipement trail',b:()=>
+  `<table class="tbl"><tr><th></th><th class="c">EF &lt;45</th><th class="c">45–90</th><th class="c">Frac.</th><th class="c">L 2–3h</th><th class="c">L &gt;3h</th></tr>
+  <tr><td class="m">🎒 Gilet</td><td class="c n">—</td><td class="c y">⚡</td><td class="c n">—</td><td class="c g">✅</td><td class="c g">✅</td></tr>
+  <tr><td class="m">👟 Ceinture</td><td class="c n">—</td><td class="c g">✅</td><td class="c y">⚡</td><td class="c n">—</td><td class="c n">—</td></tr>
+  <tr><td class="m">🧴 Flask 500</td><td class="c n">—</td><td class="c y">1×</td><td class="c y">1×</td><td class="c g">2×</td><td class="c g">2×</td></tr>
+  <tr><td class="m">🧪 Flask 250</td><td class="c n">—</td><td class="c n">—</td><td class="c n">—</td><td class="c y">⚡</td><td class="c g">✅</td></tr>
+  <tr><td class="m">🧢 Casquette</td><td class="c y">⚡</td><td class="c y">⚡</td><td class="c y">⚡</td><td class="c g">✅</td><td class="c g">✅</td></tr>
+  <tr><td class="m">🕶️ Lunettes</td><td class="c y">⚡</td><td class="c y">⚡</td><td class="c n">—</td><td class="c y">⚡</td><td class="c g">✅</td></tr>
+  <tr><td class="m">💪 Manchons</td><td class="c n">—</td><td class="c y">⚡</td><td class="c n">—</td><td class="c y">⚡</td><td class="c g">✅</td></tr>
+  <tr><td class="m">🧥 Veste</td><td class="c n">—</td><td class="c y">⚡</td><td class="c n">—</td><td class="c y">⚡</td><td class="c g">✅</td></tr>
+  <tr><td class="m">🥢 Bâtons</td><td class="c n">—</td><td class="c n">—</td><td class="c n">—</td><td class="c y">&gt;800 D+</td><td class="c g">&gt;800 D+</td></tr></table>`+
+  note('<strong>Règle montagne :</strong> &gt;2000 m, la veste Evadict est dans le gilet quelle que soit la météo. En cas de doute, prendre la couche.','red')+
+  acc('🌦️','Météo',kv('☀️ &gt;20°','Casquette obligatoire · 600–700 ml/h · sel')+kv('🌤️ 12–20°','Manchons si &lt;14° · veste pliée si &gt;2h')+kv('🌧️ Pluie','Veste portée · casquette · pas de lunettes')+kv('⛈️ Orage','Rebrousser chemin — danger objectif','r')+kv('🌨️ &lt;5°','Veste + manchons + collant · eau tiède'))+
+  acc('🎒','Gilet poche par poche',kv('Avant D','Flask 500 eau pure')+kv('Avant G','Flask 500 eau ou iso')+kv('Petites poches','Gels rotation · sel')+kv('Supérieure','Lunettes · téléphone')+kv('Dos','Veste pliée · manchons · kit secours'))
+ },
+ {id:'check',ic:'✅',t:'Check-list sortie',b:()=>`<div id="check-host"></div>`},
+ {id:'rat',ic:'🔄',t:'Rattrapage — j\'ai loupé une séance',b:()=>`<div id="rat-host"></div>`},
+];
+</script>
+<script>
+/* ═══════════════════════════════════════════════
+   STORE
+   ═══════════════════════════════════════════════ */
+const KEY = 'masterplan_v1';
+const clone = o => JSON.parse(JSON.stringify(o));
+let DB;
+function fresh(){ return {v:1,settings:{season:'auto',intensity:100,name:'Arthur',whoopAuto:true},whoop:{},goals:clone(DEFAULT_GOALS),weeks:clone(DEFAULT_WEEKS),done:{},habits:{},habitDefs:clone(DEFAULT_HABITS),notes:{}}; }
+function load(){ try{ const r=localStorage.getItem(KEY); DB = r?JSON.parse(r):fresh(); if(!DB.weeks||!DB.habitDefs) DB=Object.assign(fresh(),DB); }catch(e){ DB=fresh(); } }
+function save(){ try{ localStorage.setItem(KEY,JSON.stringify(DB)); }catch(e){ toast('⚠️ Sauvegarde impossible'); } }
+load();
+
+/* ═══════════════════════════════════════════════
+   DATES & SAISON
+   ═══════════════════════════════════════════════ */
+const pad = n => String(n).padStart(2,'0');
+const iso = d => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+const today = () => iso(new Date());
+const parseISO = s => { const [y,m,d]=s.split('-').map(Number); return new Date(y,m-1,d); };
+const dow = s => (parseISO(s).getDay()+6)%7; // 0=lundi
+const fmtDate = s => { const d=parseISO(s); return d.toLocaleDateString('fr-CH',{weekday:'long',day:'numeric',month:'long'}); };
+const fmtShort = s => { const d=parseISO(s); return `${pad(d.getDate())}/${pad(d.getMonth()+1)}`; };
+const addDays = (s,n) => { const d=parseISO(s); d.setDate(d.getDate()+n); return iso(d); };
+function seasonFor(s){
+  if(DB.settings.season!=='auto') return DB.settings.season;
+  const m = parseISO(s).getMonth()+1; // 1..12
+  if([11,12,1,2,3].includes(m)) return 'hiver';
+  if(m===4||m===10) return 'transition';
+  return 'ete';
+}
+const SEASON_L = {ete:'☀️ Été',hiver:'❄️ Hiver',transition:'🔄 Transition'};
+
+/* ═══════════════════════════════════════════════
+   WHOOP ENGINE
+   ═══════════════════════════════════════════════ */
+function zoneFor(dateS){
+  const w = DB.whoop[dateS]; if(!w||w.rec==null) return {z:'none',pct:100,why:'Aucune donnée Whoop saisie pour ce jour.'};
+  let z, why=[];
+  if(w.rhr!=null && w.rhr>=60){ z='red'; why.push(`RHR ${w.rhr} ≥ 60 → rouge automatique`); }
+  else if(w.rec>=66){ z='green'; why.push(`Recovery ${w.rec} % — corps récupéré`); }
+  else if(w.rec>=33){ z='yellow'; why.push(`Recovery ${w.rec} % — récupération partielle`); }
+  else { z='red'; why.push(`Recovery ${w.rec} % — corps non récupéré`); }
+  // sleep pattern: two consecutive nights < 6.5h → cap yellow
+  const prev = DB.whoop[addDays(dateS,-1)];
+  if(z==='green' && w.sleep!=null && w.sleep<6.5 && prev && prev.sleep!=null && prev.sleep<6.5){ z='yellow'; why.push('2 nuits <6h30 consécutives → plafonné à jaune'); }
+  const pct = z==='green'?100 : z==='yellow'?70 : 0;
+  return {z,pct,why:why.join(' · ')};
+}
+function effIntensity(dateS){
+  const zz = zoneFor(dateS);
+  const g = DB.settings.intensity||100;
+  if(!DB.settings.whoopAuto || zz.z==='none') return {pct:g,zone:zz};
+  return {pct:Math.round(g*zz.pct/100),zone:zz};
+}
+function whoopAlerts(){
+  const out=[]; const t=today();
+  const last=[...Array(7)].map((_,i)=>DB.whoop[addDays(t,-i)]).filter(Boolean);
+  const reds=[...Array(3)].map((_,i)=>zoneFor(addDays(t,-i)).z).filter(z=>z==='red').length;
+  if(reds>=3) out.push(['red','<b>3 rouges consécutifs.</b> Couper 1 séance trail et 1 renfo cette semaine. Ce n\'est pas une option.']);
+  const w=DB.whoop[t]; if(w&&w.rhr>=60) out.push(['red','<b>RHR ≥ 60.</b> Rouge automatique quelle que soit la Recovery. Repos ou mobilité douce.']);
+  const s2=[DB.whoop[t],DB.whoop[addDays(t,-1)]].filter(x=>x&&x.sleep!=null);
+  if(s2.length===2 && s2.every(x=>x.sleep<6.5)) out.push(['warn','<b>2 nuits &lt;6h30.</b> Baisser le Strain dès maintenant — ne pas attendre le rouge.']);
+  const mon=last.filter((_,i)=>dow(addDays(t,-i))===0);
+  if(last.length>=5 && last.slice(0,5).every(x=>x.rec!=null&&x.rec<50)) out.push(['warn','<b>5 jours sous 50 %.</b> Surcharge probable. Semaine à −50 % recommandée.']);
+  if(!w) out.push(['ok','<b>Whoop du jour non saisi.</b> Le plan tourne à l\'intensité globale sans ajustement.']);
+  return out;
+}
+
+/* ═══════════════════════════════════════════════
+   NAV
+   ═══════════════════════════════════════════════ */
+function go(t){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(s=>s.classList.remove('active'));
+  document.getElementById('s-'+t).classList.add('active');
+  document.querySelector(`.tab[data-t="${t}"]`).classList.add('active');
+  window.scrollTo(0,0);
+  ({jour:renderJour,whoop:renderWhoop,semaine:renderSemaine,objectifs:renderGoals,guide:renderGuide})[t]();
+}
+let _toastT; function toast(m){ const e=document.getElementById('toast'); e.textContent=m; e.classList.add('show'); clearTimeout(_toastT); _toastT=setTimeout(()=>e.classList.remove('show'),1800); }
+function openSheet(html){ document.getElementById('sheet-body').innerHTML=html; document.getElementById('sheet-bg').classList.add('open'); requestAnimationFrame(()=>document.getElementById('sheet').classList.add('open')); }
+function closeSheet(){ document.getElementById('sheet').classList.remove('open'); setTimeout(()=>document.getElementById('sheet-bg').classList.remove('open'),200); }
+const esc = s => String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+
+/* ═══════════════════════════════════════════════
+   JOUR
+   ═══════════════════════════════════════════════ */
+let viewDate = today();
+function renderJour(){
+  const d = viewDate, isT = d===today();
+  document.getElementById('j-title').textContent = isT?'Aujourd\'hui':fmtDate(d).replace(/^\w/,c=>c.toUpperCase());
+  const sz = seasonFor(d);
+  document.getElementById('j-sub').textContent = `${isT?fmtDate(d)+' · ':''}${SEASON_L[sz]}`;
+  // week strip
+  const mon = addDays(d,-dow(d)); let strip='';
+  for(let i=0;i<7;i++){ const ds=addDays(mon,i); const z=zoneFor(ds).z; const dc={green:'g',yellow:'y',red:'r'}[z]||''; strip+=`<div class="ws ${ds===d?'today':''}" onclick="viewDate='${ds}';renderJour()"><div class="d">${DAYS_S[i]}</div><div class="n">${parseISO(ds).getDate()}</div><div class="dot ${dc}"></div></div>`; }
+  document.getElementById('j-strip').innerHTML=strip;
+  // whoop hero
+  const w=DB.whoop[d]; const ei=effIntensity(d); const z=ei.zone;
+  let hero;
+  if(!w){ hero=`<div class="whoop-hero z-none"><div class="wh-top"><span class="pill grey">Whoop non saisi</span><span class="pill blue">Intensité ${DB.settings.intensity} %</span></div><div class="wh-msg">Saisis ta Recovery du matin pour ajuster automatiquement les séances du jour.</div><div class="wh-cta"><button class="btn primary" onclick="openWhoopSheet('${d}')">📊 Saisir le Whoop</button></div></div>`; }
+  else {
+    const col={green:'var(--ok)',yellow:'var(--warn)',red:'var(--red)'}[z.z];
+    const lab={green:'🟢 Vert — Go',yellow:'🟡 Jaune — Adapter',red:'🔴 Rouge — Stop'}[z.z];
+    const msg={green:'<strong>Séance planifiée complète.</strong> C\'est le jour pour une séance dure.',yellow:'<strong>Intensité −30 %.</strong> Pas de fractionné, pas d\'explosif. EF ou MTB à la place du fractionné.',red:'<strong>Mobilité douce uniquement.</strong> Même l\'enduro se reporte. Forcer ne produit aucune adaptation.'}[z.z];
+    hero=`<div class="whoop-hero z-${z.z}"><div class="wh-top"><span class="pill ${z.z==='green'?'ok':z.z==='yellow'?'warn':'red'}">${lab}</span><span class="pill blue">Effectif ${ei.pct} %</span></div>
+    <div class="wh-big" style="color:${col}">${w.rec}<small>% Recovery</small></div>
+    <div class="wh-meta">${w.hrv!=null?`<div>HRV <b>${w.hrv} ms</b></div>`:''}${w.rhr!=null?`<div>RHR <b>${w.rhr}</b></div>`:''}${w.sleep!=null?`<div>Sommeil <b>${w.sleep} h</b></div>`:''}${w.strain!=null?`<div>Strain <b>${w.strain}</b></div>`:''}</div>
+    <div class="wh-msg">${msg}<div style="font-size:11px;color:var(--text2);margin-top:4px">${z.why}</div></div>
+    <div class="wh-cta"><button class="btn sm" onclick="openWhoopSheet('${d}')">✏️ Modifier</button></div></div>`;
+  }
+  document.getElementById('j-whoop').innerHTML=hero;
+  // sessions
+  const day = DB.weeks[sz][dow(d)]; const done=DB.done[d]||{}; let h='';
+  if(!day.sessions.length) h=`<div class="empty"><div class="big">🛌</div>Aucune séance planifiée.</div>`;
+  day.sessions.forEach(s=>{
+    const T=TYPES[s.type]; const isDone=!!done[s.id];
+    const skip = z.z==='red' && s.skipOnRed;
+    let title=esc(s.title), detail=esc(s.detail);
+    if(s.scalable && s.vol!=null && ei.pct!==100 && !skip){ const v=Math.round(s.vol*ei.pct/100*10)/10; title += ` <span class="scaled">→ ${v} ${s.unit}</span>`; }
+    if(skip) detail = `<span style="color:var(--red)">Reporté — Whoop rouge. Remplacer par 20 min de mobilité.</span>`;
+    h+=`<div class="sess ${isDone?'done':''} ${skip?'skipped':''}"><div class="chk" onclick="toggleDone('${d}','${s.id}')">${isDone?'✓':''}</div><div class="ic">${T.ic}</div><div class="bd"><div class="sess-t">${title}</div><div class="sess-d">${detail}</div></div><div class="sess-time">${esc(s.time)}</div></div>`;
+  });
+  if(z.z==='red') h+=`<div class="sess"><div class="chk" onclick="toggleDone('${d}','_mob')">${done._mob?'✓':''}</div><div class="ic">🧘</div><div class="bd"><div class="sess-t">Mobilité douce 20 min</div><div class="sess-d">Remplace tout le reste aujourd'hui.</div></div><div class="sess-time">—</div></div>`;
+  document.getElementById('j-sessions').innerHTML=h;
+  // habits
+  const hd=DB.habits[d]||{}; let hh=''; let lastG='';
+  DB.habitDefs.forEach(hb=>{ if(hb.grp!==lastG){ hh+=`<div class="habit-hdr">${hb.grp}</div>`; lastG=hb.grp; } hh+=`<div class="habit ${hd[hb.id]?'done':''}" onclick="toggleHabit('${d}','${hb.id}')"><div class="chk">${hd[hb.id]?'✓':''}</div><div class="lb">${esc(hb.lb)}</div>${hb.sport?'<span class="grp">sport</span>':''}</div>`; });
+  document.getElementById('j-habits').innerHTML=hh;
+  const n=document.getElementById('j-note'); n.value=DB.notes[d]||''; n.oninput=()=>{ DB.notes[d]=n.value; save(); };
+}
+function toggleDone(d,id){ DB.done[d]=DB.done[d]||{}; DB.done[d][id]=!DB.done[d][id]; save(); renderJour(); }
+function toggleHabit(d,id){ DB.habits[d]=DB.habits[d]||{}; DB.habits[d][id]=!DB.habits[d][id]; save(); renderJour(); }
+
+/* ═══════════════════════════════════════════════
+   WHOOP
+   ═══════════════════════════════════════════════ */
+function openWhoopSheet(d){
+  d = d||today(); const w=DB.whoop[d]||{};
+  openSheet(`<h2>📊 Whoop</h2>
+  <div class="field"><label>Date</label><input type="date" id="wf-date" value="${d}"></div>
+  <div class="field"><label>Recovery</label><div class="sliderval" id="wf-recv">${w.rec??60} %</div><input type="range" class="slider rec" id="wf-rec" min="0" max="100" value="${w.rec??60}" oninput="document.getElementById('wf-recv').textContent=this.value+' %'"></div>
+  <div class="row3">
+    <div class="field"><label>HRV ms</label><input type="number" id="wf-hrv" inputmode="numeric" placeholder="—" value="${w.hrv??''}"></div>
+    <div class="field"><label>RHR bpm</label><input type="number" id="wf-rhr" inputmode="numeric" placeholder="—" value="${w.rhr??''}"></div>
+    <div class="field"><label>Strain</label><input type="number" id="wf-strain" inputmode="decimal" step="0.1" placeholder="—" value="${w.strain??''}"></div>
+  </div>
+  <div class="field"><label>Sommeil (heures)</label><input type="number" id="wf-sleep" inputmode="decimal" step="0.25" placeholder="ex. 7.5" value="${w.sleep??''}"></div>
+  <div class="field"><label>Note</label><input type="text" id="wf-note" placeholder="Contexte, ressenti…" value="${esc(w.note||'')}"></div>
+  <div class="sheet-actions">${DB.whoop[d]?`<button class="btn danger" onclick="delWhoop('${d}')">Supprimer</button>`:''}<button class="btn ghost" onclick="closeSheet()">Annuler</button><button class="btn primary" onclick="saveWhoop()">Enregistrer</button></div>`);
+}
+function saveWhoop(){
+  const d=document.getElementById('wf-date').value; const num=id=>{const v=document.getElementById(id).value; return v===''?null:Number(v);};
+  DB.whoop[d]={rec:Number(document.getElementById('wf-rec').value),hrv:num('wf-hrv'),rhr:num('wf-rhr'),strain:num('wf-strain'),sleep:num('wf-sleep'),note:document.getElementById('wf-note').value};
+  save(); closeSheet(); toast('✅ Whoop enregistré'); if(document.getElementById('s-jour').classList.contains('active')) renderJour(); else renderWhoop();
+}
+function delWhoop(d){ delete DB.whoop[d]; save(); closeSheet(); toast('Supprimé'); renderWhoop(); }
+function renderWhoop(){
+  const al=whoopAlerts(); document.getElementById('w-alerts').innerHTML=al.map(([c,t])=>`<div class="alert ${c}">${t}</div>`).join('');
+  const days=[...Array(14)].map((_,i)=>addDays(today(),-13+i));
+  const ws=days.map(d=>DB.whoop[d]).filter(Boolean);
+  const avg=(k)=>{const a=ws.map(w=>w[k]).filter(v=>v!=null); return a.length?Math.round(a.reduce((x,y)=>x+y,0)/a.length*10)/10:'—';};
+  document.getElementById('w-stats').innerHTML=`<div class="stat"><div class="v">${avg('rec')}${avg('rec')!=='—'?'%':''}</div><div class="l">Recovery moy. 14j</div></div><div class="stat"><div class="v">${avg('rhr')}</div><div class="l">RHR moy.</div></div><div class="stat"><div class="v">${avg('sleep')}${avg('sleep')!=='—'?'h':''}</div><div class="l">Sommeil moy.</div></div>`;
+  // chart recovery
+  const W=340,H=110,bw=W/14-4; let svg='';
+  svg+=`<line x1="0" y1="${H-H*0.66}" x2="${W}" y2="${H-H*0.66}" stroke="#14532d" stroke-dasharray="3,3"/><line x1="0" y1="${H-H*0.33}" x2="${W}" y2="${H-H*0.33}" stroke="#78350f" stroke-dasharray="3,3"/>`;
+  days.forEach((d,i)=>{ const w=DB.whoop[d]; const x=i*(W/14)+2; if(!w||w.rec==null){ svg+=`<rect x="${x}" y="${H-3}" width="${bw}" height="3" fill="#1c2a38" rx="1"/>`; return; } const h=Math.max(3,H*w.rec/100); const c=w.rec>=66?'#4ade80':w.rec>=33?'#fbbf24':'#f87171'; svg+=`<rect x="${x}" y="${H-h}" width="${bw}" height="${h}" fill="${c}" rx="2" opacity="${d===today()?1:.75}"/>`; });
+  document.getElementById('w-chart').innerHTML=svg;
+  document.getElementById('w-chart-lbl').innerHTML=`<span>${fmtShort(days[0])}</span><span>${fmtShort(days[6])}</span><span>${fmtShort(days[13])}</span>`;
+  // chart rhr
+  const rs=days.map(d=>DB.whoop[d]?.rhr).filter(v=>v!=null); const mn=rs.length?Math.min(...rs)-3:45, mx=rs.length?Math.max(...rs)+3:65; let s2=`<line x1="0" y1="${H-(60-mn)/(mx-mn)*H}" x2="${W}" y2="${H-(60-mn)/(mx-mn)*H}" stroke="#4a1515" stroke-dasharray="3,3"/>`; let pts=[];
+  days.forEach((d,i)=>{ const w=DB.whoop[d]; if(!w||w.rhr==null) return; const x=i*(W/14)+W/28; const y=H-(w.rhr-mn)/(mx-mn)*H; pts.push([x,y,w.rhr]); });
+  if(pts.length>1) s2+=`<polyline points="${pts.map(p=>p[0]+','+p[1]).join(' ')}" fill="none" stroke="#60a5fa" stroke-width="2"/>`;
+  pts.forEach(p=>s2+=`<circle cx="${p[0]}" cy="${p[1]}" r="3.5" fill="${p[2]>=60?'#f87171':'#60a5fa'}"/>`);
+  document.getElementById('w-chart2').innerHTML=s2;
+  // list
+  const all=Object.keys(DB.whoop).sort().reverse().slice(0,30); let h='';
+  if(!all.length) h=`<div class="empty"><div class="big">📊</div>Aucune entrée. Appuie sur ＋ pour saisir ta première Recovery.</div>`;
+  all.forEach(d=>{ const w=DB.whoop[d]; const z=zoneFor(d); const c={green:'var(--ok)',yellow:'var(--warn)',red:'var(--red)'}[z.z]; h+=`<div class="li" onclick="openWhoopSheet('${d}')"><div class="bd"><div class="t">${fmtDate(d)}</div><div class="s">${w.hrv!=null?'HRV '+w.hrv+' · ':''}${w.rhr!=null?'RHR '+w.rhr+' · ':''}${w.sleep!=null?w.sleep+'h':''}${w.note?' · '+esc(w.note):''}</div></div><div class="r" style="color:${c}">${w.rec}%</div></div>`; });
+  document.getElementById('w-list').innerHTML=h;
+}
+
+/* ═══════════════════════════════════════════════
+   SEMAINE (éditeur)
+   ═══════════════════════════════════════════════ */
+let weekView=null;
+function setWeekView(s){ weekView=s; renderSemaine(); }
+function setIntensity(v){ DB.settings.intensity=Number(v); document.getElementById('int-val').textContent=v+' %'; save(); if(document.getElementById('s-semaine').classList.contains('active')) renderDays(); }
+function renderSemaine(){
+  if(!weekView) weekView=seasonFor(today());
+  document.querySelectorAll('#sem-segs .seg').forEach(e=>e.classList.toggle('active',e.dataset.s===weekView));
+  document.getElementById('int-slider').value=DB.settings.intensity; document.getElementById('int-val').textContent=DB.settings.intensity+' %';
+  renderDays();
+}
+function renderDays(){
+  const wk=DB.weeks[weekView]; const td=dow(today()); const isCur=seasonFor(today())===weekView; let h='';
+  wk.forEach((day,i)=>{
+    const dots='●'.repeat(day.load)+'○'.repeat(5-day.load); const lc=day.load>=4?'var(--red)':day.load>=3?'var(--warn)':'var(--ok)';
+    h+=`<div class="card"><div class="dayhdr ${isCur&&i===td?'today':''}"><span class="dn">${DAYS[i]}</span><span class="load" style="color:${lc}">${dots}</span><button class="add" onclick="openSessSheet('${weekView}',${i},null)">＋</button></div>`;
+    if(!day.sessions.length) h+=`<div class="empty" style="padding:14px">Jour libre</div>`;
+    day.sessions.forEach((s,j)=>{ const T=TYPES[s.type]; let title=esc(s.title); if(s.scalable&&s.vol!=null&&DB.settings.intensity!==100){ title+=` <span class="scaled">→ ${Math.round(s.vol*DB.settings.intensity/100*10)/10} ${s.unit}</span>`; }
+      h+=`<div class="sess" onclick="openSessSheet('${weekView}',${i},${j})"><div class="ic">${T.ic}</div><div class="bd"><div class="sess-t">${title}</div><div class="sess-d">${esc(s.detail)}${s.scalable?' <span class="tag t-whoop" style="margin-left:4px">ajustable</span>':''}</div></div><div class="sess-time">${esc(s.time)}</div><span class="edit">›</span></div>`; });
+    h+=`</div>`;
+  });
+  document.getElementById('sem-days').innerHTML=h;
+}
+function openSessSheet(season,di,si){
+  const s = si==null ? S('run','','','09:00') : DB.weeks[season][di].sessions[si];
+  const opts=Object.entries(TYPES).map(([k,v])=>`<option value="${k}" ${s.type===k?'selected':''}>${v.ic} ${v.l}</option>`).join('');
+  openSheet(`<h2>${si==null?'Nouvelle séance':'Modifier la séance'}</h2><div style="font-size:12px;color:var(--text2);margin:-8px 0 12px">${SEASON_L[season]} · ${DAYS[di]}</div>
+  <div class="field"><label>Type</label><select id="sf-type">${opts}</select></div>
+  <div class="field"><label>Titre</label><input type="text" id="sf-title" value="${esc(s.title)}" placeholder="ex. Run 1/3 · EF"></div>
+  <div class="field"><label>Détail</label><textarea id="sf-detail" placeholder="Contenu, consignes…">${esc(s.detail)}</textarea></div>
+  <div class="row3">
+    <div class="field"><label>Heure</label><input type="text" id="sf-time" value="${esc(s.time)}" placeholder="09:00"></div>
+    <div class="field"><label>Volume</label><input type="number" id="sf-vol" inputmode="decimal" value="${s.vol??''}" placeholder="—"></div>
+    <div class="field"><label>Unité</label><input type="text" id="sf-unit" value="${esc(s.unit)}" placeholder="km / min"></div>
+  </div>
+  <div class="card" style="margin:4px 0 0"><div class="toggle"><div><div class="tl">Ajustable par l'intensité</div><div class="ts">Le volume se réduit selon Whoop et intensité globale</div></div><div class="sw ${s.scalable?'on':''}" id="sf-scal" onclick="this.classList.toggle('on')"></div></div>
+  <div class="toggle"><div><div class="tl">Reportée si Whoop rouge</div><div class="ts">Désactiver pour les rituels (petit-déj, mobilité…)</div></div><div class="sw ${s.skipOnRed?'on':''}" id="sf-skip" onclick="this.classList.toggle('on')"></div></div></div>
+  ${si!=null?`<div style="display:flex;gap:8px;margin-top:10px"><button class="btn sm" onclick="moveSess('${season}',${di},${si},-1)">↑ Monter</button><button class="btn sm" onclick="moveSess('${season}',${di},${si},1)">↓ Descendre</button><button class="btn sm danger" style="margin-left:auto" onclick="delSess('${season}',${di},${si})">Supprimer</button></div>`:''}
+  <div class="sheet-actions"><button class="btn ghost" onclick="closeSheet()">Annuler</button><button class="btn primary" onclick="saveSess('${season}',${di},${si==null?'null':si},'${s.id}')">Enregistrer</button></div>`);
+}
+function saveSess(season,di,si,id){
+  const g=i=>document.getElementById(i); const v=g('sf-vol').value;
+  const s={id, type:g('sf-type').value, title:g('sf-title').value.trim()||'Séance', detail:g('sf-detail').value.trim(), time:g('sf-time').value.trim()||'—', vol:v===''?null:Number(v), unit:g('sf-unit').value.trim(), scalable:g('sf-scal').classList.contains('on'), skipOnRed:g('sf-skip').classList.contains('on')};
+  const arr=DB.weeks[season][di].sessions; if(si==null) arr.push(s); else arr[si]=s;
+  save(); closeSheet(); toast('✅ Enregistré'); renderDays();
+}
+function delSess(season,di,si){ DB.weeks[season][di].sessions.splice(si,1); save(); closeSheet(); toast('Supprimée'); renderDays(); }
+function moveSess(season,di,si,dir){ const a=DB.weeks[season][di].sessions; const j=si+dir; if(j<0||j>=a.length) return; [a[si],a[j]]=[a[j],a[si]]; save(); closeSheet(); renderDays(); }
+function resetWeek(){ if(!confirm(`Réinitialiser la semaine ${SEASON_L[weekView]} aux valeurs du Master Plan ?`)) return; DB.weeks[weekView]=clone(DEFAULT_WEEKS[weekView]); save(); toast('↺ Semaine réinitialisée'); renderDays(); }
+
+/* ═══════════════════════════════════════════════
+   OBJECTIFS
+   ═══════════════════════════════════════════════ */
+function renderGoals(){
+  const act=DB.goals.filter(g=>g.status==='active'), arch=DB.goals.filter(g=>g.status!=='active');
+  const card=g=>{ const lower = g.metric==='index'; const p = g.target? (lower ? Math.max(0,Math.min(100,Math.round((1-(g.current-g.target)/Math.max(1,(DEFAULT_GOALS.find(x=>x.id===g.id)?.current??g.current)-g.target))*100))) : Math.min(100,Math.round(g.current/g.target*100))) : 0;
+    const dl=g.deadline?`${Math.ceil((parseISO(g.deadline)-new Date())/864e5)} j`:'—';
+    return `<div class="goal" onclick="openGoalSheet('${g.id}')"><div class="goal-t"><span class="ic">${g.ic}</span><h4>${esc(g.title)}</h4><span class="tag t-mob">${esc(g.sport)}</span></div><div class="goal-m">${esc(g.notes)}</div><div class="prog"><i style="width:${p}%"></i></div><div class="goal-f"><span>${g.current} / ${g.target} ${esc(g.metric)}</span><span>${g.status==='active'?dl:g.status==='done'?'✅ Atteint':'Abandonné'} · ${p}%</span></div></div>`; };
+  document.getElementById('g-list').innerHTML=act.length?act.map(card).join(''):`<div class="empty"><div class="big">🎯</div>Aucun objectif actif.</div>`;
+  document.getElementById('g-arch').innerHTML=arch.length?arch.map(card).join(''):`<div class="empty" style="padding:14px">—</div>`;
+}
+function openGoalSheet(id){
+  const g = id ? DB.goals.find(x=>x.id===id) : {id:'g'+Date.now().toString(36),ic:'🎯',title:'',sport:'',metric:'',target:1,current:0,deadline:'',status:'active',notes:''};
+  openSheet(`<h2>${id?'Objectif':'Nouvel objectif'}</h2>
+  <div class="row2"><div class="field"><label>Icône</label><input type="text" id="gf-ic" value="${esc(g.ic)}"></div><div class="field"><label>Sport</label><input type="text" id="gf-sport" value="${esc(g.sport)}" placeholder="Trail, Golf…"></div></div>
+  <div class="field"><label>Titre</label><input type="text" id="gf-title" value="${esc(g.title)}"></div>
+  <div class="row3"><div class="field"><label>Actuel</label><input type="number" id="gf-cur" inputmode="decimal" value="${g.current}"></div><div class="field"><label>Cible</label><input type="number" id="gf-tgt" inputmode="decimal" value="${g.target}"></div><div class="field"><label>Unité</label><input type="text" id="gf-metric" value="${esc(g.metric)}" placeholder="km, index…"></div></div>
+  <div class="row2"><div class="field"><label>Échéance</label><input type="date" id="gf-dl" value="${g.deadline}"></div><div class="field"><label>Statut</label><select id="gf-st"><option value="active" ${g.status==='active'?'selected':''}>Actif</option><option value="done" ${g.status==='done'?'selected':''}>Atteint</option><option value="dropped" ${g.status==='dropped'?'selected':''}>Abandonné</option></select></div></div>
+  <div class="field"><label>Notes</label><textarea id="gf-notes">${esc(g.notes)}</textarea></div>
+  <div class="sheet-actions">${id?`<button class="btn danger" onclick="delGoal('${id}')">Supprimer</button>`:''}<button class="btn ghost" onclick="closeSheet()">Annuler</button><button class="btn primary" onclick="saveGoal('${g.id}',${!!id})">Enregistrer</button></div>`);
+}
+function saveGoal(id,exists){ const g=i=>document.getElementById(i).value; const o={id,ic:g('gf-ic')||'🎯',sport:g('gf-sport'),title:g('gf-title').trim()||'Objectif',current:Number(g('gf-cur'))||0,target:Number(g('gf-tgt'))||1,metric:g('gf-metric'),deadline:g('gf-dl'),status:g('gf-st'),notes:g('gf-notes')}; if(exists){ const i=DB.goals.findIndex(x=>x.id===id); DB.goals[i]=o; } else DB.goals.push(o); save(); closeSheet(); toast('✅ Objectif enregistré'); renderGoals(); }
+function delGoal(id){ DB.goals=DB.goals.filter(x=>x.id!==id); save(); closeSheet(); renderGoals(); }
+
+/* ═══════════════════════════════════════════════
+   HABITUDES (éditeur)
+   ═══════════════════════════════════════════════ */
+function openHabitEditor(){
+  const rows=DB.habitDefs.map((h,i)=>`<div class="li"><div class="bd"><div class="t">${esc(h.lb)}</div><div class="s">${esc(h.grp)}</div></div><button class="btn sm danger" onclick="DB.habitDefs.splice(${i},1);save();openHabitEditor()">✕</button></div>`).join('');
+  openSheet(`<h2>Rituel du jour</h2><div class="card">${rows}</div>
+  <div class="field"><label>Nouvelle habitude</label><input type="text" id="hf-lb" placeholder="Libellé"></div><div class="field"><label>Groupe</label><input type="text" id="hf-grp" placeholder="☀️ Matin, 🌙 Soir…" value="🏋️ Sport"></div>
+  <div class="sheet-actions"><button class="btn ghost" onclick="closeSheet();renderJour()">Fermer</button><button class="btn primary" onclick="addHabit()">Ajouter</button></div>`);
+}
+function addHabit(){ const lb=document.getElementById('hf-lb').value.trim(); if(!lb) return; DB.habitDefs.push({id:'h'+Date.now().toString(36),grp:document.getElementById('hf-grp').value.trim()||'Autre',lb,sport:true}); save(); openHabitEditor(); }
+
+/* ═══════════════════════════════════════════════
+   GUIDE
+   ═══════════════════════════════════════════════ */
+let guideTab='plan';
+function renderGuide(){
+  document.getElementById('gd-tabs').innerHTML=GUIDE_SECTIONS.map(s=>`<span class="subtab ${guideTab===s.id?'active':''}" onclick="guideTab='${s.id}';renderGuide()">${s.ic} ${s.t.split(' —')[0].split(' -')[0]}</span>`).join('');
+  const sec=GUIDE_SECTIONS.find(s=>s.id===guideTab);
+  document.getElementById('gd-body').innerHTML=`<div class="card"><div class="card-h"><span class="ic" style="font-size:20px">${sec.ic}</span><h3>${sec.t}</h3></div><div class="card-b">${sec.b()}</div></div>`;
+  if(guideTab==='check') renderCheck(); if(guideTab==='rat') renderRat();
+}
+/* check-list */
+const CHECK=[
+ ['📊 Whoop consulté','avant de décider','court,qualite,longue'],['🎒 Gilet Camelbak','sangles ajustées, aucun ballottement','longue'],['👟 Ceinture Salomon','si >45 min','court,qualite'],['🧴 Flask 500 ×2','pleines · 1 avec sel si >2h','longue'],['🧪 Flask 250 iso','40 g glucides si >2h30','longue'],['🧢 Casquette','si UV >3 ou >18°','court,qualite,longue'],['🕶️ Lunettes','poche supérieure','longue'],['🧥 Veste Evadict','pliée dans le gilet si >2000 m','longue'],['💪 Manchons','si <15° au départ','qualite,longue'],['🥢 Bâtons','si >800 m D+','longue'],['⚡ Gels comptés','1 / 40 min','qualite,longue'],['🧂 Pastilles sel','1 / 90 min si >15°','longue'],['📱 Téléphone + trace','batterie >80 %','qualite,longue'],['🩹 Kit secours','ampoules · bande · survie','longue'],['🦶 Pieds','vaseline · ongles courts · chaussettes testées','longue'],['🎯 Allures connues','avant de partir','qualite']
+];
+let checkMode='court', checkState={};
+function renderCheck(){ const host=document.getElementById('check-host'); if(!host) return; const items=CHECK.filter(c=>c[2].split(',').includes(checkMode)); const n=items.filter((c,i)=>checkState[checkMode+c[0]]).length;
+  host.innerHTML=`<div class="segs" style="margin-bottom:10px"><div class="seg ${checkMode==='court'?'active':''}" onclick="checkMode='court';renderCheck()">EF &lt;1h</div><div class="seg ${checkMode==='qualite'?'active':''}" onclick="checkMode='qualite';renderCheck()">Qualité</div><div class="seg ${checkMode==='longue'?'active':''}" onclick="checkMode='longue';renderCheck()">Longue</div></div>
+  ${items.map(c=>`<div class="habit ${checkState[checkMode+c[0]]?'done':''}" onclick="checkState['${checkMode+c[0]}']=!checkState['${checkMode+c[0]}'];renderCheck()"><div class="chk">${checkState[checkMode+c[0]]?'✓':''}</div><div class="lb">${c[0]}<div style="font-size:11px;color:var(--text2)">${c[1]}</div></div></div>`).join('')}
+  <div class="prog" style="margin-top:12px"><i style="width:${items.length?n/items.length*100:0}%"></i></div><div class="goal-f"><span>${n} / ${items.length}</span>${n===items.length&&n>0?'<span style="color:var(--ok)">✅ Prêt</span>':''}</div>`; }
+/* rattrapage */
+let ratDay='lun', ratSeason=null, ratReason='travail';
+function renderRat(){ const host=document.getElementById('rat-host'); if(!host) return; if(!ratSeason) ratSeason=seasonFor(today())==='hiver'?'hiver':'ete';
+  const d=RATTRAPAGE[ratDay+'-'+ratSeason]; const r=RAT_REASON[ratReason]; const vc={warn:'warn',skip:'',stop:'red',ok:'ok'}[d.v];
+  host.innerHTML=`<div class="field"><label>Jour loupé</label><div class="subtabs">${['lun','mar','mer','jeu','ven','sam','dim'].map((k,i)=>`<span class="subtab ${ratDay===k?'active':''}" onclick="ratDay='${k}';renderRat()">${DAYS_S[i]}</span>`).join('')}</div></div>
+  <div class="row2"><div class="field"><label>Saison</label><div class="segs"><div class="seg ${ratSeason==='ete'?'active':''}" onclick="ratSeason='ete';renderRat()">☀️ Été</div><div class="seg ${ratSeason==='hiver'?'active':''}" onclick="ratSeason='hiver';renderRat()">❄️ Hiver</div></div></div>
+  <div class="field"><label>Raison</label><select onchange="ratReason=this.value;renderRat()">${Object.entries(RAT_REASON).map(([k,v])=>`<option value="${k}" ${ratReason===k?'selected':''}>${v.lb}</option>`).join('')}</select></div></div>
+  <div class="note ${r.cls}">${r.t}</div>
+  <div class="note ${vc}"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><strong>${d.t}</strong><span class="pill ${vc||'grey'}">${d.tag}</span></div>${d.s.map((x,i)=>`<div style="display:flex;gap:8px;padding:4px 0;border-top:1px solid var(--line)"><span class="mono" style="color:var(--text3);min-width:18px">${pad(i+1)}</span><span>${x}</span></div>`).join('')}</div>`; }
+
+/* ═══════════════════════════════════════════════
+   RÉGLAGES
+   ═══════════════════════════════════════════════ */
+function openSettings(){
+  openSheet(`<h2>⚙️ Réglages</h2>
+  <div class="field"><label>Saison</label><div class="segs"><div class="seg ${DB.settings.season==='auto'?'active':''}" onclick="setSeason('auto')">Auto</div><div class="seg ${DB.settings.season==='ete'?'active':''}" onclick="setSeason('ete')">☀️</div><div class="seg ${DB.settings.season==='hiver'?'active':''}" onclick="setSeason('hiver')">❄️</div><div class="seg ${DB.settings.season==='transition'?'active':''}" onclick="setSeason('transition')">🔄</div></div><div class="hint">Auto : nov–mars hiver · avril & octobre transition · mai–sept été. Actuellement : ${SEASON_L[seasonFor(today())]}</div></div>
+  <div class="card"><div class="toggle"><div><div class="tl">Ajustement automatique par le Whoop</div><div class="ts">Vert 100 % · Jaune 70 % · Rouge mobilité</div></div><div class="sw ${DB.settings.whoopAuto?'on':''}" onclick="DB.settings.whoopAuto=!DB.settings.whoopAuto;save();this.classList.toggle('on')"></div></div></div>
+  <div class="sec-t">Données</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><button class="btn" onclick="exportData()">⬇️ Exporter JSON</button><button class="btn" onclick="document.getElementById('imp').click()">⬆️ Importer</button></div><input type="file" id="imp" accept=".json" style="display:none" onchange="importData(this)">
+  <div class="hint" style="margin-top:8px;font-size:11px;color:var(--text3)">Les données vivent sur cet appareil. Exporte régulièrement — c'est ta sauvegarde.</div>
+  <div class="sec-t">Zone rouge</div>
+  <button class="btn danger full" onclick="if(confirm('Tout effacer et revenir au Master Plan initial ? Whoop, objectifs, séances cochées : tout sera perdu.')){localStorage.removeItem(KEY);location.reload();}">Réinitialiser l'app</button>
+  <div class="sheet-actions"><button class="btn primary" onclick="closeSheet();renderJour()">Fermer</button></div>`);
+}
+function setSeason(s){ DB.settings.season=s; save(); openSettings(); }
+function exportData(){ const b=new Blob([JSON.stringify(DB,null,1)],{type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(b); a.download=`masterplan-${today()}.json`; a.click(); toast('⬇️ Export lancé'); }
+function importData(inp){ const f=inp.files[0]; if(!f) return; const r=new FileReader(); r.onload=()=>{ try{ const o=JSON.parse(r.result); if(!o.weeks||!o.settings) throw 0; DB=Object.assign(fresh(),o); save(); closeSheet(); toast('✅ Importé'); renderJour(); }catch(e){ toast('❌ Fichier invalide'); } }; r.readAsText(f); }
+
+/* ═══════════════════════════════════════════════
+   INIT
+   ═══════════════════════════════════════════════ */
+try{ if(navigator.serviceWorker && typeof navigator.serviceWorker.register==='function') navigator.serviceWorker.register('sw.js').catch(()=>{}); }catch(e){}
+renderJour();
+</script>
+</body>
+</html>
